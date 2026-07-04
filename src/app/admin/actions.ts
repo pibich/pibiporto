@@ -1,0 +1,236 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+
+export type ProjectInput = {
+  title: string;
+  description: string;
+  demo_url: string;
+  repo_url: string;
+  tech: string[];
+  image_url: string | null;
+};
+
+export type ActionResult = { ok: boolean; error?: string };
+
+async function requireUser() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Tidak terautentikasi.");
+  return supabase;
+}
+
+function normalize(input: ProjectInput) {
+  return {
+    title: input.title.trim(),
+    description: input.description.trim() || null,
+    demo_url: input.demo_url.trim() || null,
+    repo_url: input.repo_url.trim() || null,
+    tech: input.tech,
+    image_url: input.image_url,
+  };
+}
+
+export async function createProject(
+  input: ProjectInput,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const row = normalize(input);
+    if (!row.title) return { ok: false, error: "Judul wajib diisi." };
+
+    const { error } = await supabase.from("projects").insert(row);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function updateProject(
+  id: string,
+  input: ProjectInput,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const row = normalize(input);
+    if (!row.title) return { ok: false, error: "Judul wajib diisi." };
+
+    const { error } = await supabase.from("projects").update(row).eq("id", id);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function deleteProject(id: string): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase.from("projects").delete().eq("id", id);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+// ───────────────────────────── games (joki) ─────────────────────────────
+
+export type GameInput = {
+  name: string;
+  tags: string[];
+  image_url: string | null;
+};
+
+function normalizeGame(input: GameInput) {
+  return {
+    name: input.name.trim(),
+    tags: input.tags.map((t) => t.trim()).filter(Boolean),
+    image_url: input.image_url,
+  };
+}
+
+export async function createGame(input: GameInput): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const row = normalizeGame(input);
+    if (!row.name) return { ok: false, error: "Nama game wajib diisi." };
+
+    const { error } = await supabase.from("games").insert(row);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function updateGame(
+  id: string,
+  input: GameInput,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const row = normalizeGame(input);
+    if (!row.name) return { ok: false, error: "Nama game wajib diisi." };
+
+    const { error } = await supabase.from("games").update(row).eq("id", id);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function deleteGame(id: string): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase.from("games").delete().eq("id", id);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+// ───────────────────────────── testimonials ─────────────────────────────
+
+export async function createTestimonial(
+  image_url: string,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    if (!image_url) return { ok: false, error: "Gambar wajib diunggah." };
+
+    const { error } = await supabase.from("testimonials").insert({ image_url });
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function deleteTestimonial(id: string): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase.from("testimonials").delete().eq("id", id);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+// ───────────────────────────── profile picture ─────────────────────────────
+
+export async function updateProfileImage(
+  image_url: string | null,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase
+      .from("settings")
+      .update({
+        profile_image_url: image_url,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", true);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function setBoostingOpen(open: boolean): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase
+      .from("settings")
+      .update({ boosting_open: open, updated_at: new Date().toISOString() })
+      .eq("id", true);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/boosting");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function signOut(): Promise<void> {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+}

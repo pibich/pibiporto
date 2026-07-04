@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
+/* ── Accent (user-tweakable in the prototype; single source of truth) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --acc: #5ba3f5; /* alternatives: #3fb96a  #a78bfa  #f0a84b */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Fonts — variables injected by next/font in layout.tsx */
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Surfaces */
+  --color-bg: #0e1116;
+  --color-panel: #141920;
+
+  /* Text */
+  --color-ink: #e6edf3; /* primary */
+  --color-body: #a3adb8; /* body / secondary */
+  --color-prose: #c4cdd6; /* long-form paragraphs */
+  --color-muted: #8b949e; /* muted */
+  --color-hint: #565f6b; /* extra-muted / hints */
+
+  /* Accent + status */
+  --color-acc: var(--acc);
+  --color-success: #3fb96a;
+  --color-danger: #e0645a;
+  --color-discord: #5865f2;
+  --color-youtube: #dd3333;
+
+  /* Lines / chips (white with varying alpha) */
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-input: rgb(255 255 255 / 0.12);
+  --color-line-chip: rgb(255 255 255 / 0.18);
+  --color-line-strong: rgb(255 255 255 / 0.2);
+  --color-line-hover: rgb(255 255 255 / 0.25);
+  --color-chip: rgb(255 255 255 / 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::placeholder {
+  color: var(--color-hint);
+}
+
+/* Terminal-cursor blink (hero, admin login) */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Status-pill dot pulse (boosting) */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }

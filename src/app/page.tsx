@@ -1,65 +1,241 @@
 import Image from "next/image";
+import { ContactForm } from "@/components/contact-form";
+import { Hero } from "@/components/hero";
+import { ProjectCard } from "@/components/project-card";
+import { SectionHeading } from "@/components/section-heading";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteNav } from "@/components/site-nav";
+import { getProjects, getSettings } from "@/lib/data";
+import { getLatestVideos } from "@/lib/youtube";
 
-export default function Home() {
+export const revalidate = 0; // always reflect the latest admin changes
+
+const foundation = ["HTML", "CSS", "JavaScript"];
+const learning = ["Next.js", "Tailwind CSS", "Supabase"];
+const design = ["Figma", "UI/UX Design"];
+
+const chipBase =
+  "rounded-[7px] px-[14px] py-[7px] font-mono text-[13px] transition-colors";
+
+const dateFmt = new Intl.DateTimeFormat("id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+export default async function Home() {
+  const [projects, settings, videos] = await Promise.all([
+    getProjects(),
+    getSettings(),
+    getLatestVideos(3),
+  ]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <SiteNav />
+
+      <Hero />
+
+      {/* ── ABOUT ── */}
+      <section id="about" className="border-t border-line">
+        <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-start gap-12 px-7 py-[72px] sm:grid-cols-[180px_1fr]">
+          <div className="relative flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-2xl border border-line bg-panel font-mono text-[11px] text-hint">
+            {settings.profile_image_url ? (
+              <Image
+                src={settings.profile_image_url}
+                alt="Foto profil Vincent Bryan"
+                fill
+                sizes="180px"
+                className="object-cover"
+              />
+            ) : (
+              "Foto profil"
+            )}
+          </div>
+          <div>
+            <SectionHeading>## tentang-saya</SectionHeading>
+            <p className="mt-[18px] max-w-[640px] text-[16.5px] leading-[1.75] text-prose text-pretty">
+              Halo! Saya Vincent, seorang Website Developer yang percaya bahwa
+              desain terbaik adalah yang sederhana. Berbekal HTML, CSS, dan
+              JavaScript, saat ini saya menekuni Next.js dengan Tailwind CSS dan
+              Supabase untuk membangun aplikasi web modern yang cepat dan rapi.
+              Sebagai UI/UX Designer, saya merancang antarmuka di Figma sebelum
+              menuangkannya ke dalam kode.
+            </p>
+            <p className="mt-[14px] max-w-[640px] text-[16.5px] leading-[1.75] text-prose text-pretty">
+              Di luar coding, saya aktif sebagai content creator di YouTube
+              lewat channel{" "}
+              <a
+                href="https://www.youtube.com/@pibichori"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-acc"
+              >
+                PIBI Ch.
+              </a>{" "}
+              — berbagi guide game dan stream santai.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ── SKILLS ── */}
+      <section id="skills" className="border-t border-line">
+        <div className="mx-auto max-w-[1080px] px-7 py-[72px]">
+          <SectionHeading>## skills-&amp;-tech-stack</SectionHeading>
+          <div className="mt-[26px] grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="rounded-xl border border-line bg-panel px-6 py-[22px]">
+              <div className="font-mono text-[12px] text-muted">
+                {"// fondasi"}
+              </div>
+              <div className="mt-[14px] flex flex-wrap gap-[10px]">
+                {foundation.map((s) => (
+                  <span
+                    key={s}
+                    className={`${chipBase} border border-line-chip text-ink`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-xl border border-line bg-panel px-6 py-[22px]">
+              <div className="font-mono text-[12px] text-muted">
+                {"// sedang ditekuni"}
+              </div>
+              <div className="mt-[14px] flex flex-wrap gap-[10px]">
+                {learning.map((s) => (
+                  <span
+                    key={s}
+                    className={`${chipBase} border border-acc font-medium text-acc`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-xl border border-line bg-panel px-6 py-[22px]">
+              <div className="font-mono text-[12px] text-muted">
+                {"// ui-ux design"}
+              </div>
+              <div className="mt-[14px] flex flex-wrap gap-[10px]">
+                {design.map((s) => (
+                  <span
+                    key={s}
+                    className={`${chipBase} border border-line-chip text-ink`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* ── PROJECTS ── */}
+      <section id="projects" className="border-t border-line">
+        <div className="mx-auto max-w-[1080px] px-7 py-[72px]">
+          <SectionHeading>## projects</SectionHeading>
+          {projects.length > 0 ? (
+            <div className="mt-[26px] grid grid-cols-1 gap-6 md:grid-cols-2">
+              {projects.map((p) => (
+                <ProjectCard key={p.id} project={p} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-[26px] font-mono text-[13px] text-hint">
+              Belum ada project — tambahkan dari halaman admin.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* ── YOUTUBE ── */}
+      <section id="youtube" className="border-t border-line">
+        <div className="mx-auto max-w-[1080px] px-7 py-[72px]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <SectionHeading>## youtube — PIBI Ch.</SectionHeading>
+              <p className="mt-[10px] text-[15px] text-muted">
+                Guide game &amp; stream santai — sisi lain saya di luar coding.
+              </p>
+            </div>
+            <a
+              href="https://www.youtube.com/@pibichori"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg bg-youtube px-[18px] py-[10px] font-mono text-[12.5px] font-semibold text-white transition-opacity hover:opacity-85"
+            >
+              <span className="h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
+              Kunjungi Channel
+            </a>
+          </div>
+          {videos.length > 0 ? (
+            <div className="mt-[26px] grid grid-cols-1 gap-5 sm:grid-cols-3">
+              {videos.map((v) => (
+                <a
+                  key={v.id}
+                  href={v.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block"
+                >
+                  <div className="relative h-[160px] w-full overflow-hidden rounded-xl border border-line bg-panel transition-colors group-hover:border-line-hover">
+                    <Image
+                      src={v.thumbnail}
+                      alt={v.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 336px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-[10px] text-sm font-medium leading-[1.4] transition-colors group-hover:text-acc">
+                    {v.title}
+                  </div>
+                  <div className="mt-1 font-mono text-[11px] text-hint">
+                    {v.published ? dateFmt.format(new Date(v.published)) : ""}
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-[26px] font-mono text-[13px] text-hint">
+              Belum bisa memuat video — kunjungi channel langsung.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* ── CONTACT ── */}
+      <section id="contact" className="border-t border-line">
+        <div className="mx-auto grid max-w-[1080px] grid-cols-1 gap-14 px-7 pt-[72px] pb-[88px] md:grid-cols-2">
+          <div>
+            <SectionHeading>## contact-me</SectionHeading>
+            <p className="mt-[18px] text-[16.5px] leading-[1.7] text-prose text-pretty">
+              Punya ide project atau ingin berkolaborasi? Kirim pesan — saya
+              akan balas secepatnya.
+            </p>
+            <div className="mt-[26px] flex flex-col gap-[10px]">
+              <div className="font-mono text-[13px] text-muted">
+                <span className="text-hint">email:</span>{" "}
+                vincentbmainid@gmail.com
+              </div>
+              <div className="font-mono text-[13px] text-muted">
+                <span className="text-hint">github:</span> github.com/pibich
+              </div>
+              <div className="font-mono text-[13px] text-muted">
+                <span className="text-hint">youtube:</span> @pibichori
+              </div>
+            </div>
+          </div>
+          <div className="rounded-[14px] border border-line bg-panel px-7 py-[26px]">
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
+    </>
   );
 }
