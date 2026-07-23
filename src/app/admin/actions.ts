@@ -87,107 +87,6 @@ export async function deleteProject(id: string): Promise<ActionResult> {
   }
 }
 
-// ───────────────────────────── games (joki) ─────────────────────────────
-
-export type GameInput = {
-  name: string;
-  tags: string[];
-  image_url: string | null;
-};
-
-function normalizeGame(input: GameInput) {
-  return {
-    name: input.name.trim(),
-    tags: input.tags.map((t) => t.trim()).filter(Boolean),
-    image_url: input.image_url,
-  };
-}
-
-export async function createGame(input: GameInput): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    const row = normalizeGame(input);
-    if (!row.name) return { ok: false, error: "Nama game wajib diisi." };
-
-    const { error } = await supabase.from("games").insert(row);
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
-export async function updateGame(
-  id: string,
-  input: GameInput,
-): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    const row = normalizeGame(input);
-    if (!row.name) return { ok: false, error: "Nama game wajib diisi." };
-
-    const { error } = await supabase.from("games").update(row).eq("id", id);
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
-export async function deleteGame(id: string): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    const { error } = await supabase.from("games").delete().eq("id", id);
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
-// ───────────────────────────── testimonials ─────────────────────────────
-
-export async function createTestimonial(
-  image_url: string,
-): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    if (!image_url) return { ok: false, error: "Gambar wajib diunggah." };
-
-    const { error } = await supabase.from("testimonials").insert({ image_url });
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
-export async function deleteTestimonial(id: string): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    const { error } = await supabase.from("testimonials").delete().eq("id", id);
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
 // ───────────────────────────── profile picture ─────────────────────────────
 
 export async function updateProfileImage(
@@ -205,23 +104,6 @@ export async function updateProfileImage(
     if (error) return { ok: false, error: error.message };
 
     revalidatePath("/");
-    revalidatePath("/admin");
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
-
-export async function setBoostingOpen(open: boolean): Promise<ActionResult> {
-  try {
-    const supabase = await requireUser();
-    const { error } = await supabase
-      .from("settings")
-      .update({ boosting_open: open, updated_at: new Date().toISOString() })
-      .eq("id", true);
-    if (error) return { ok: false, error: error.message };
-
-    revalidatePath("/boosting");
     revalidatePath("/admin");
     return { ok: true };
   } catch (e) {

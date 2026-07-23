@@ -25,7 +25,6 @@
   --color-acc: var(--acc);
   --color-success: #3fb96a;
   --color-danger: #e0645a;
-  --color-discord: #5865f2;
   --color-youtube: #dd3333;
 
   /* Lines / chips (white with varying alpha) */
@@ -60,16 +59,5 @@ body {
   50%,
   100% {
     opacity: 0;
-  }
-}
-
-/* Status-pill dot pulse (boosting) */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
   }
 }

@@ -22,21 +22,6 @@ export type Project = {
 
 export type Settings = {
   id: boolean;
-  boosting_open: boolean;
   profile_image_url: string | null;
   updated_at: string;
-};
-
-export type Game = {
-  id: string;
-  name: string;
-  tags: string[];
-  image_url: string | null;
-  created_at: string;
-};
-
-export type Testimonial = {
-  id: string;
-  image_url: string;
-  created_at: string;
 };

@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { deleteProject, setBoostingOpen, signOut } from "@/app/admin/actions";
-import type { Game, Project, Testimonial } from "@/lib/types";
-import { GamesSection } from "./games-section";
+import { deleteProject, signOut } from "@/app/admin/actions";
+import type { Project } from "@/lib/types";
 import { ProfileSection } from "./profile-section";
 import { ProjectModal } from "./project-modal";
-import { TestimonialsSection } from "./testimonials-section";
 
 function ym(iso: string) {
   return iso.slice(0, 7); // YYYY-MM
@@ -16,16 +14,10 @@ function ym(iso: string) {
 
 export function AdminDashboard({
   projects,
-  boostingOpen,
   profileImageUrl,
-  games,
-  testimonials,
 }: {
   projects: Project[];
-  boostingOpen: boolean;
   profileImageUrl: string | null;
-  games: Game[];
-  testimonials: Testimonial[];
 }) {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,13 +38,6 @@ export function AdminDashboard({
     if (!confirm(`Hapus project "${p.title}"?`)) return;
     startTransition(async () => {
       await deleteProject(p.id);
-      router.refresh();
-    });
-  }
-
-  function handleToggleBoosting() {
-    startTransition(async () => {
-      await setBoostingOpen(!boostingOpen);
       router.refresh();
     });
   }
@@ -114,36 +99,6 @@ export function AdminDashboard({
 
         {/* homepage profile picture */}
         <ProfileSection profileImageUrl={profileImageUrl} />
-
-        {/* boosting status toggle (added per handoff — not in prototype) */}
-        <div className="mt-6 flex items-center justify-between rounded-xl border border-line bg-panel px-[18px] py-4">
-          <div>
-            <div className="font-mono text-[13px] text-ink">
-              status boosting
-            </div>
-            <div className="mt-1 font-mono text-[11.5px] text-muted">
-              tampil di halaman /boosting
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleToggleBoosting}
-            disabled={pending}
-            className={`rounded-full border-[1.5px] px-[16px] py-[7px] font-mono text-[12px] font-semibold transition-colors ${
-              boostingOpen
-                ? "border-success text-success"
-                : "border-danger text-danger"
-            }`}
-          >
-            {boostingOpen
-              ? "OPEN — klik untuk tutup"
-              : "CLOSED — klik untuk buka"}
-          </button>
-        </div>
-
-        {/* boosting: games (joki) + testimonial screenshots */}
-        <GamesSection games={games} />
-        <TestimonialsSection testimonials={testimonials} />
 
         {/* list */}
         <div className="mt-7 flex flex-col gap-3">

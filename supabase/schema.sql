@@ -1,6 +1,6 @@
 -- Portfolio schema — run in Supabase Dashboard → SQL Editor.
--- Matches the design handoff: projects (managed from admin), a single settings
--- row for the boosting open/close status, and contact-form messages.
+-- Projects (managed from admin), a single settings row for the homepage
+-- profile picture, and contact-form messages.
 
 -- ─────────────────────────── projects ───────────────────────────
 create table if not exists public.projects (
@@ -26,11 +26,10 @@ create policy "projects_authed_write"
   using (true) with check (true);
 
 -- ─────────────────────────── settings ───────────────────────────
--- Single-row table (id = true) holding site-wide bits: the boosting
--- open/close status and the homepage profile picture.
+-- Single-row table (id = true) holding site-wide bits: the homepage
+-- profile picture.
 create table if not exists public.settings (
   id                boolean primary key default true,
-  boosting_open     boolean not null default true,
   profile_image_url text,
   updated_at        timestamptz not null default now(),
   constraint settings_singleton check (id)
@@ -39,8 +38,8 @@ create table if not exists public.settings (
 -- Backfill the column for databases created before it was added.
 alter table public.settings add column if not exists profile_image_url text;
 
-insert into public.settings (id, boosting_open)
-values (true, true)
+insert into public.settings (id)
+values (true)
 on conflict (id) do nothing;
 
 alter table public.settings enable row level security;
@@ -52,46 +51,6 @@ create policy "settings_public_read"
 drop policy if exists "settings_authed_write" on public.settings;
 create policy "settings_authed_write"
   on public.settings for update to authenticated
-  using (true) with check (true);
-
--- ─────────────────────────── games (joki) ───────────────────────────
--- The boosting service game list, managed from the admin page.
-create table if not exists public.games (
-  id         uuid primary key default gen_random_uuid(),
-  name       text not null,
-  tags       text[] not null default '{}',
-  image_url  text,
-  created_at timestamptz not null default now()
-);
-
-alter table public.games enable row level security;
-
-drop policy if exists "games_public_read" on public.games;
-create policy "games_public_read"
-  on public.games for select using (true);
-
-drop policy if exists "games_authed_write" on public.games;
-create policy "games_authed_write"
-  on public.games for all to authenticated
-  using (true) with check (true);
-
--- ─────────────────────────── testimonials ───────────────────────────
--- Screenshot testimonials shown on the boosting page, managed from admin.
-create table if not exists public.testimonials (
-  id         uuid primary key default gen_random_uuid(),
-  image_url  text not null,
-  created_at timestamptz not null default now()
-);
-
-alter table public.testimonials enable row level security;
-
-drop policy if exists "testimonials_public_read" on public.testimonials;
-create policy "testimonials_public_read"
-  on public.testimonials for select using (true);
-
-drop policy if exists "testimonials_authed_write" on public.testimonials;
-create policy "testimonials_authed_write"
-  on public.testimonials for all to authenticated
   using (true) with check (true);
 
 -- ─────────────────────────── messages ───────────────────────────
@@ -132,7 +91,7 @@ create policy "project_images_authed_write"
   with check (bucket_id = 'project-images');
 
 -- ─────────────────────── storage (site assets) ───────────────────────
--- Profile picture, game banners, and testimonial screenshots.
+-- Homepage profile picture.
 insert into storage.buckets (id, name, public)
 values ('site-assets', 'site-assets', true)
 on conflict (id) do nothing;
