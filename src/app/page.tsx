@@ -1,4 +1,15 @@
 import Image from "next/image";
+import type { IconType } from "react-icons";
+import { LuPenTool } from "react-icons/lu";
+import {
+  SiCss,
+  SiFigma,
+  SiHtml5,
+  SiJavascript,
+  SiNextdotjs,
+  SiSupabase,
+  SiTailwindcss,
+} from "react-icons/si";
 import { ContactForm } from "@/components/contact-form";
 import { Hero } from "@/components/hero";
 import { ProjectCard } from "@/components/project-card";
@@ -15,7 +26,43 @@ const learning = ["Next.js", "Tailwind CSS", "Supabase"];
 const design = ["Figma", "UI/UX Design"];
 
 const chipBase =
-  "rounded-[7px] px-[14px] py-[7px] font-mono text-[13px] transition-colors";
+  "inline-flex items-center gap-[7px] rounded-[7px] px-[14px] py-[7px] font-mono text-[13px] transition-colors";
+
+// Brand icon + accent colour per skill. currentColor lets monochrome logos
+// (Next.js, the design pen) inherit the chip's text colour.
+const skillIcons: Record<string, { Icon: IconType; color: string }> = {
+  HTML: { Icon: SiHtml5, color: "#E34F26" },
+  CSS: { Icon: SiCss, color: "#1572B6" },
+  JavaScript: { Icon: SiJavascript, color: "#F7DF1E" },
+  "Next.js": { Icon: SiNextdotjs, color: "currentColor" },
+  "Tailwind CSS": { Icon: SiTailwindcss, color: "#38BDF8" },
+  Supabase: { Icon: SiSupabase, color: "#3FCF8E" },
+  Figma: { Icon: SiFigma, color: "#F24E1E" },
+  "UI/UX Design": { Icon: LuPenTool, color: "currentColor" },
+};
+
+function SkillChip({
+  name,
+  accent = false,
+}: {
+  name: string;
+  accent?: boolean;
+}) {
+  const entry = skillIcons[name];
+  const Icon = entry?.Icon;
+  return (
+    <span
+      className={`${chipBase} border ${
+        accent ? "border-acc font-medium text-acc" : "border-line-chip text-ink"
+      }`}
+    >
+      {Icon && (
+        <Icon size={15} color={entry.color} className="flex-none" aria-hidden />
+      )}
+      {name}
+    </span>
+  );
+}
 
 const dateFmt = new Intl.DateTimeFormat("id-ID", {
   day: "numeric",
@@ -90,12 +137,7 @@ export default async function Home() {
               </div>
               <div className="mt-[14px] flex flex-wrap gap-[10px]">
                 {foundation.map((s) => (
-                  <span
-                    key={s}
-                    className={`${chipBase} border border-line-chip text-ink`}
-                  >
-                    {s}
-                  </span>
+                  <SkillChip key={s} name={s} />
                 ))}
               </div>
             </div>
@@ -105,12 +147,7 @@ export default async function Home() {
               </div>
               <div className="mt-[14px] flex flex-wrap gap-[10px]">
                 {learning.map((s) => (
-                  <span
-                    key={s}
-                    className={`${chipBase} border border-acc font-medium text-acc`}
-                  >
-                    {s}
-                  </span>
+                  <SkillChip key={s} name={s} accent />
                 ))}
               </div>
             </div>
@@ -120,12 +157,7 @@ export default async function Home() {
               </div>
               <div className="mt-[14px] flex flex-wrap gap-[10px]">
                 {design.map((s) => (
-                  <span
-                    key={s}
-                    className={`${chipBase} border border-line-chip text-ink`}
-                  >
-                    {s}
-                  </span>
+                  <SkillChip key={s} name={s} />
                 ))}
               </div>
             </div>
@@ -219,7 +251,7 @@ export default async function Home() {
             <div className="mt-[26px] flex flex-col gap-[10px]">
               <div className="font-mono text-[13px] text-muted">
                 <span className="text-hint">email:</span>{" "}
-                vincentbmainid@gmail.com
+                vincentbryanid@gmail.com
               </div>
               <div className="font-mono text-[13px] text-muted">
                 <span className="text-hint">github:</span> github.com/pibich

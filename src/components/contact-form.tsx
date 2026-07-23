@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { type ContactState, sendMessage } from "@/app/actions";
 
 const inputClass =
@@ -10,6 +10,18 @@ const labelClass = "font-mono text-[11.5px] text-muted";
 const initial: ContactState = { ok: false };
 
 export function ContactForm() {
+  // Bumping the key remounts the inner form, which resets useActionState back
+  // to `initial` — clearing the success state without a full page reload.
+  const [resetKey, setResetKey] = useState(0);
+  return (
+    <ContactFormInner
+      key={resetKey}
+      onReset={() => setResetKey((k) => k + 1)}
+    />
+  );
+}
+
+function ContactFormInner({ onReset }: { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(sendMessage, initial);
 
   if (state.ok) {
@@ -21,13 +33,13 @@ export function ContactForm() {
         <div className="text-sm text-muted">
           Terima kasih! Saya akan segera membalas.
         </div>
-        {/* Reload resets the form back to its editable state */}
-        <a
-          href="/#contact"
+        <button
+          type="button"
+          onClick={onReset}
           className="rounded-md border border-line-input px-[14px] py-[7px] font-mono text-xs text-muted transition-colors hover:text-ink"
         >
           kirim lagi
-        </a>
+        </button>
       </div>
     );
   }
