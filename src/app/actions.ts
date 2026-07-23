@@ -1,5 +1,7 @@
 "use server";
 
+import { after } from "next/server";
+import { sendContactNotification } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 
 export type ContactState = { ok: boolean; error?: string };
@@ -25,5 +27,10 @@ export async function sendMessage(
     console.error("sendMessage:", error.message);
     return { ok: false, error: "Gagal mengirim pesan. Coba lagi." };
   }
+
+  // Notify by email after the response is sent, so the visitor isn't blocked.
+  // The message is already saved above, so a failed email never loses data.
+  after(() => sendContactNotification({ name, email, message }));
+
   return { ok: true };
 }
