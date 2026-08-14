@@ -28,6 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
+      data-scroll-behavior="smooth"
       className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-bg text-ink">{children}</body>

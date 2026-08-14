@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Project, Settings } from "@/lib/types";
+import type { Project, Settings, TechItem } from "@/lib/types";
 
 /** Projects for the public homepage / admin list, newest first. */
 export async function getProjects(): Promise<Project[]> {
@@ -11,6 +11,38 @@ export async function getProjects(): Promise<Project[]> {
 
   if (error) {
     console.error("getProjects:", error.message);
+    return [];
+  }
+  return data ?? [];
+}
+
+/** A single project by its slug, or null if not found. */
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error) {
+    console.error("getProjectBySlug:", error.message);
+    return null;
+  }
+  return data;
+}
+
+/** Tech-stack items for the homepage skills section & project tech picker. */
+export async function getTechStack(): Promise<TechItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("tech_stack")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("getTechStack:", error.message);
     return [];
   }
   return data ?? [];

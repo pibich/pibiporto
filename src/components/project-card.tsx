@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/types";
 
 export function ProjectCard({ project }: { project: Project }) {
@@ -20,8 +21,19 @@ export function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
       <div className="px-6 pt-[22px] pb-6">
-        <h3 className="text-[19px] font-semibold">{project.title}</h3>
-        {project.description && (
+        <h3 className="text-[19px] font-semibold">
+          {project.slug ? (
+            <Link
+              href={`/projects/${project.slug}`}
+              className="transition-colors hover:text-acc"
+            >
+              {project.title}
+            </Link>
+          ) : (
+            project.title
+          )}
+        </h3>
+        {project.show_description && project.description && (
           <p className="mt-2 text-[14.5px] leading-[1.6] text-muted">
             {project.description}
           </p>
@@ -39,6 +51,14 @@ export function ProjectCard({ project }: { project: Project }) {
           </div>
         )}
         <div className="mt-4 flex gap-4">
+          {project.slug && (
+            <Link
+              href={`/projects/${project.slug}`}
+              className="font-mono text-[12.5px] text-acc hover:underline"
+            >
+              {project.doc_source !== "none" ? "dokumentasi" : "detail"} →
+            </Link>
+          )}
           {project.demo_url && (
             <a
               href={project.demo_url}

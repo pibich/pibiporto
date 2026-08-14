@@ -6,7 +6,8 @@ import {
   type ProjectInput,
   updateProject,
 } from "@/app/admin/actions";
-import { type Project, TECH_OPTIONS } from "@/lib/types";
+import { Markdown } from "@/components/markdown";
+import type { DocSource, Project } from "@/lib/types";
 import { uploadImage } from "@/lib/upload";
 
 const inputClass =
@@ -15,19 +16,31 @@ const labelClass = "font-mono text-[11.5px] text-muted";
 
 export function ProjectModal({
   project,
+  techOptions,
   onClose,
   onSaved,
 }: {
   project: Project | null;
+  techOptions: string[];
   onClose: () => void;
   onSaved: () => void;
 }) {
   const isEdit = !!project;
   const [title, setTitle] = useState(project?.title ?? "");
   const [description, setDescription] = useState(project?.description ?? "");
+  const [showDescription, setShowDescription] = useState(
+    project?.show_description ?? true,
+  );
   const [demoUrl, setDemoUrl] = useState(project?.demo_url ?? "");
   const [repoUrl, setRepoUrl] = useState(project?.repo_url ?? "");
   const [tech, setTech] = useState<string[]>(project?.tech ?? []);
+  const [documentation, setDocumentation] = useState(
+    project?.documentation ?? "",
+  );
+  const [docSource, setDocSource] = useState<DocSource>(
+    project?.doc_source ?? "manual",
+  );
+  const [showPreview, setShowPreview] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
     project?.image_url ?? null,
@@ -74,6 +87,9 @@ export function ProjectModal({
         repo_url: repoUrl,
         tech,
         image_url,
+        documentation,
+        doc_source: docSource,
+        show_description: showDescription,
       };
       const result = project
         ? await updateProject(project.id, payload)
@@ -128,17 +144,37 @@ export function ProjectModal({
           </div>
 
           <div className="flex flex-col gap-[6px]">
-            <label className={labelClass} htmlFor="p-desc">
-              deskripsi singkat
-            </label>
-            <textarea
-              id="p-desc"
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Deskripsi 1-2 kalimat…"
-              className={`${inputClass} resize-y`}
-            />
+            <div className="flex items-center justify-between">
+              <label className={labelClass} htmlFor="p-desc">
+                deskripsi singkat
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowDescription((v) => !v)}
+                className={`font-mono text-[11px] transition-colors ${
+                  showDescription
+                    ? "text-acc hover:opacity-80"
+                    : "text-hint hover:text-muted"
+                }`}
+              >
+                {showDescription ? "● aktif" : "○ nonaktif"}
+              </button>
+            </div>
+            {showDescription ? (
+              <textarea
+                id="p-desc"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Deskripsi 1-2 kalimat…"
+                className={`${inputClass} resize-y`}
+              />
+            ) : (
+              <span className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] text-hint">
+                Deskripsi dinonaktifkan — tidak ditampilkan di kartu maupun
+                halaman detail. Teksnya tetap tersimpan.
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -171,7 +207,13 @@ export function ProjectModal({
           <div className="flex flex-col gap-2">
             <span className={labelClass}>tech stack</span>
             <div className="flex flex-wrap gap-2">
-              {TECH_OPTIONS.map((name) => {
+              {techOptions.length === 0 && (
+                <span className="font-mono text-[11.5px] text-hint">
+                  Belum ada tech — tambahkan dulu di daftar tech-stack.
+                </span>
+              )}
+              {/* include any tech already on the project even if it was later removed from the list */}
+              {[...new Set([...techOptions, ...tech])].map((name) => {
                 const on = tech.includes(name);
                 return (
                   <button
@@ -190,6 +232,92 @@ export function ProjectModal({
               })}
             </div>
           </div>
+
+          <div className="flex flex-col gap-2">
+            <span className={labelClass}>sumber dokumentasi</span>
+            <div className="flex gap-2">
+              {(
+                [
+                  ["manual", "tulis manual"],
+                  ["github", "dari README GitHub"],
+                  ["none", "nonaktif"],
+                ] as [DocSource, string][]
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setDocSource(value)}
+                  className={`rounded-md border px-3 py-[6px] font-mono text-[12px] transition-colors ${
+                    docSource === value
+                      ? "border-acc text-acc"
+                      : "border-line-input text-muted"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {docSource === "none" && (
+            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] leading-[1.7] text-hint">
+              Dokumentasi dinonaktifkan — halaman detail tidak menampilkan
+              bagian dokumentasi. Isi manual (bila ada) tetap tersimpan.
+            </div>
+          )}
+
+          {docSource === "github" && (
+            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] leading-[1.7] text-muted">
+              Dokumentasi diambil otomatis dari README repo (
+              <span className="text-ink">link repo</span> di atas) dan selalu
+              menampilkan versi terbaru. Pastikan link repo terisi. Repo private
+              butuh <span className="text-ink">GITHUB_TOKEN</span> di server.
+              Salinan terakhir disimpan sebagai cadangan saat kamu simpan.
+            </div>
+          )}
+
+          {docSource === "manual" && (
+            <div className="flex flex-col gap-[6px]">
+              <div className="flex items-center justify-between">
+                <label className={labelClass} htmlFor="p-doc">
+                  dokumentasi (markdown)
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPreview((v) => !v)}
+                  className="font-mono text-[11px] text-muted transition-colors hover:text-ink"
+                >
+                  {showPreview ? "← tulis" : "pratinjau →"}
+                </button>
+              </div>
+              {showPreview ? (
+                <div className="min-h-[160px] rounded-lg border border-line-input bg-bg px-[14px] py-[11px]">
+                  {documentation.trim() ? (
+                    <Markdown>{documentation}</Markdown>
+                  ) : (
+                    <span className="font-mono text-[12px] text-hint">
+                      Belum ada isi.
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <textarea
+                  id="p-doc"
+                  rows={10}
+                  value={documentation}
+                  onChange={(e) => setDocumentation(e.target.value)}
+                  placeholder={
+                    "## Tentang\nCeritakan project ini…\n\n## Cara pakai\n1. …"
+                  }
+                  className={`${inputClass} resize-y font-mono text-[13px] leading-[1.6]`}
+                />
+              )}
+              <span className="font-mono text-[11px] text-hint">
+                Mendukung Markdown: # judul, **tebal**, - list, `kode`,
+                [link](url).
+              </span>
+            </div>
+          )}
 
           <div className="flex flex-col gap-[6px]">
             <span className={labelClass}>screenshot</span>

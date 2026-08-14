@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { deleteProject, signOut } from "@/app/admin/actions";
-import type { Project } from "@/lib/types";
+import type { Project, TechItem } from "@/lib/types";
 import { ProfileSection } from "./profile-section";
 import { ProjectModal } from "./project-modal";
+import { TechSection } from "./tech-section";
 
 function ym(iso: string) {
   return iso.slice(0, 7); // YYYY-MM
@@ -14,9 +15,11 @@ function ym(iso: string) {
 
 export function AdminDashboard({
   projects,
+  tech,
   profileImageUrl,
 }: {
   projects: Project[];
+  tech: TechItem[];
   profileImageUrl: string | null;
 }) {
   const router = useRouter();
@@ -100,6 +103,9 @@ export function AdminDashboard({
         {/* homepage profile picture */}
         <ProfileSection profileImageUrl={profileImageUrl} />
 
+        {/* homepage tech-stack */}
+        <TechSection tech={tech} />
+
         {/* list */}
         <div className="mt-7 flex flex-col gap-3">
           {projects.length === 0 && (
@@ -158,6 +164,7 @@ export function AdminDashboard({
       {modalOpen && (
         <ProjectModal
           project={editing}
+          techOptions={tech.map((t) => t.name)}
           onClose={() => setModalOpen(false)}
           onSaved={() => {
             setModalOpen(false);

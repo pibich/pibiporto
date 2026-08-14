@@ -1,13 +1,16 @@
-export const TECH_OPTIONS = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "Next.js",
-  "Tailwind CSS",
-  "Supabase",
-] as const;
+export type TechCategory = "foundation" | "learning" | "design";
 
-export type Tech = (typeof TECH_OPTIONS)[number];
+export type TechItem = {
+  id: string;
+  name: string;
+  category: TechCategory;
+  icon_slug: string | null;
+  color: string | null;
+  sort_order: number;
+  created_at: string;
+};
+
+export type DocSource = "manual" | "github" | "none";
 
 export type Project = {
   id: string;
@@ -17,6 +20,10 @@ export type Project = {
   repo_url: string | null;
   tech: string[];
   image_url: string | null;
+  slug: string | null;
+  documentation: string | null;
+  doc_source: DocSource;
+  show_description: boolean;
   created_at: string;
 };
 
