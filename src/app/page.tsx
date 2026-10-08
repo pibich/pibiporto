@@ -16,19 +16,9 @@ export const revalidate = 0; // always reflect the latest admin changes
 const chipBase =
   "inline-flex items-center gap-[7px] rounded-[7px] px-[14px] py-[7px] font-mono text-[13px] transition-colors";
 
-function SkillChip({
-  item,
-  accent = false,
-}: {
-  item: TechItem;
-  accent?: boolean;
-}) {
+function SkillChip({ item }: { item: TechItem }) {
   return (
-    <span
-      className={`${chipBase} border ${
-        accent ? "border-acc font-medium text-acc" : "border-line-chip text-ink"
-      }`}
-    >
+    <span className={`${chipBase} border border-line-chip text-ink`}>
       <TechIcon
         name={item.name}
         iconSlug={item.icon_slug}
@@ -113,7 +103,7 @@ export default async function Home() {
         <div className="mx-auto max-w-[1080px] px-7 py-[72px]">
           <SectionHeading>## skills-&amp;-tech-stack</SectionHeading>
           {techByCategory.length > 0 ? (
-            <div className="mt-[26px] grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="mt-[26px] grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {techByCategory.map((cat) => (
                 <div
                   key={cat.key}
@@ -124,11 +114,7 @@ export default async function Home() {
                   </div>
                   <div className="mt-[14px] flex flex-wrap gap-[10px]">
                     {cat.items.map((item) => (
-                      <SkillChip
-                        key={item.id}
-                        item={item}
-                        accent={cat.accent}
-                      />
+                      <SkillChip key={item.id} item={item} />
                     ))}
                   </div>
                 </div>

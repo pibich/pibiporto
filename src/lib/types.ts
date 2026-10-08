@@ -1,4 +1,11 @@
-export type TechCategory = "foundation" | "learning" | "design";
+export type TechCategory =
+  | "frontend"
+  | "backend"
+  | "database"
+  | "baas"
+  | "mobile"
+  | "tools"
+  | "lainnya";
 
 export type TechItem = {
   id: string;

@@ -22,7 +22,7 @@ export function TechModal({
   const isEdit = !!tech;
   const [name, setName] = useState(tech?.name ?? "");
   const [category, setCategory] = useState<TechCategory>(
-    tech?.category ?? "foundation",
+    tech?.category ?? "frontend",
   );
   const [iconSlug, setIconSlug] = useState(tech?.icon_slug ?? "");
   const [color, setColor] = useState(tech?.color ?? "");

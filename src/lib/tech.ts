@@ -1,15 +1,18 @@
 import type { TechCategory } from "@/lib/types";
 
-// Category → label + styling used by the homepage skills section.
-// `accent` mirrors the old "sedang ditekuni" highlight.
+// Categories shown in the homepage skills section and offered by the admin
+// tech form. Key matches the CHECK constraint on `tech_stack.category`.
 export const TECH_CATEGORIES: {
   key: TechCategory;
   label: string; // shown as a "// comment" heading in the terminal theme
-  accent: boolean;
 }[] = [
-  { key: "foundation", label: "fondasi", accent: false },
-  { key: "learning", label: "sedang ditekuni", accent: true },
-  { key: "design", label: "ui-ux design", accent: false },
+  { key: "frontend", label: "frontend" },
+  { key: "backend", label: "backend" },
+  { key: "database", label: "database" },
+  { key: "baas", label: "baas" },
+  { key: "mobile", label: "mobile" },
+  { key: "tools", label: "tools" },
+  { key: "lainnya", label: "lainnya" },
 ];
 
 /**

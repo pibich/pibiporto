@@ -1,5 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Kategori Skill (tech-stack)
+
+Setiap item tech-stack punya satu dari kategori berikut. Opsi kategorinya muncul
+di form admin (`+ tambah tech`) dan menentukan kartu mana yang menampilkannya di
+section `## skills-&-tech-stack` homepage.
+
+| Kategori  | Isi (contoh)                                          |
+| --------- | ----------------------------------------------------- |
+| frontend  | HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS |
+| backend   | PHP, Laravel, REST API                                |
+| database  | MySQL, PostgreSQL                                     |
+| baas      | Supabase, Firebase                                    |
+| mobile    | Kotlin (Android Studio), React Native                 |
+| tools     | Git, GitHub, VS Code, Figma, phpMyAdmin               |
+| lainnya   | Python, Java, C++, UI/UX Design                       |
+
+Kode terkait:
+
+- `src/lib/types.ts` — union `TechCategory` (harus sama dengan constraint DB)
+- `src/lib/tech.ts` — `TECH_CATEGORIES`, urutan & label yang tampil
+- `supabase/tech_stack.sql` — skema tabel + data awal
+- `supabase/tech-categories.sql` — migrasi database lama (foundation/learning/design → kategori baru)
+
+Database yang sudah berjalan: jalankan `supabase/tech-categories.sql` sekali di
+Supabase SQL Editor. Database baru tidak perlu — `tech_stack.sql` sudah memakai
+kategori baru.
+
 ## Getting Started
 
 First, run the development server:

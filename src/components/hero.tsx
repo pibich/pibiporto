@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 
 const TAGLINE = "Web Developer · UI/UX Designer · Content Creator";
 
+// Taruh filenya di public/ — buka di tab baru supaya PDF-nya tidak
+// menggantikan halaman portofolio. (%20 = spasi di nama file.)
+const CV_URL = "/CV_Vincent%20Bryan.pdf";
+
 export function Hero() {
   const [typed, setTyped] = useState("");
 
@@ -32,13 +36,21 @@ export function Hero() {
         Saya membangun website yang sederhana dan enak dipandang — fokus pada
         detail tampilan, kecepatan, dan pengalaman pengguna.
       </p>
-      <div className="mt-[34px] flex gap-[14px]">
+      <div className="mt-[34px] flex flex-wrap gap-[14px]">
         <Link
           href="#projects"
           className="rounded-lg bg-acc px-[22px] py-3 font-mono text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-85"
         >
           Lihat Project →
         </Link>
+        <a
+          href={CV_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-lg border border-line-strong px-[22px] py-3 font-mono text-[13.5px] text-ink transition-colors hover:border-acc hover:text-acc"
+        >
+          Lihat CV <span className="text-hint">(PDF)</span>
+        </a>
         <Link
           href="#contact"
           className="rounded-lg border border-line-strong px-[22px] py-3 font-mono text-[13.5px] text-ink transition-colors hover:border-acc hover:text-acc"
