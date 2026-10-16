@@ -22,12 +22,13 @@ export function TechIcon({
   className?: string;
 }) {
   const [failed, setFailed] = useState(false);
-  if (failed) return null;
+  const src = techIconUrl(name, iconSlug, color);
+  if (!src || failed) return null;
 
   return (
     // biome-ignore lint/performance/noImgElement: tiny external SVG logo from the Simple Icons CDN
     <img
-      src={techIconUrl(name, iconSlug, color)}
+      src={src}
       alt=""
       aria-hidden
       width={size}

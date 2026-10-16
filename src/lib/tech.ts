@@ -15,6 +15,44 @@ export const TECH_CATEGORIES: {
   { key: "lainnya", label: "lainnya" },
 ];
 
+// Nama brand yang slug Simple Icons-nya tidak bisa diturunkan otomatis
+// (slug resmi berbeda dari hasil deriveSlug, atau ikonnya sudah dihapus
+// dari Simple Icons). Value berupa slug Simple Icons, atau path ikon lokal
+// di /public yang diawali "/" (mis. VS Code, REST API).
+const ICON_OVERRIDES: Record<string, string> = {
+  html: "html5",
+  "react native": "react",
+  "rest api": "/icons/rest-api.svg",
+  "vs code": "/icons/vscode.svg",
+};
+
+// Simple Icons CDN memakai warna brand asli; beberapa brand nyaris hitam
+// sehingga tidak terlihat di latar gelap. Slug ini dipaksa ke warna terang
+// kecuali admin mengatur warna sendiri.
+const LIGHT_ICONS: Record<string, string> = {
+  nextdotjs: "e6edf3",
+  github: "e6edf3",
+  vercel: "e6edf3",
+  express: "e6edf3",
+  django: "e6edf3",
+  rust: "e6edf3",
+  prisma: "e6edf3",
+  opencv: "e6edf3",
+};
+
+/** Slug ikon Simple Icons untuk sebuah nama tech, atau null bila tidak ada. */
+export function iconSlugFor(
+  name: string,
+  override?: string | null,
+): string | null {
+  const explicit = override?.trim().toLowerCase();
+  if (explicit) return explicit;
+  const key = name.trim().toLowerCase();
+  const mapped = ICON_OVERRIDES[key];
+  if (mapped !== undefined && !mapped.startsWith("/")) return mapped || null;
+  return deriveSlug(name) || null;
+}
+
 /**
  * Turn a tech name into a Simple Icons slug, mirroring the official
  * `titleToSlug` algorithm closely enough for common brand names.
@@ -32,17 +70,23 @@ export function deriveSlug(name: string): string {
 }
 
 /**
- * Public Simple Icons CDN URL for a tech's logo. The slug is auto-derived from
- * the name unless an explicit override is provided. When `color` is set (hex
- * without '#'), the logo is tinted; otherwise the brand colour is used.
+ * Public URL for a tech's logo, or null when no icon exists for it.
+ * Local icons (paths starting with "/") are served from /public; everything
+ * else resolves via the Simple Icons CDN. When `color` is set (hex without
+ * '#'), the CDN logo is tinted; local icons keep their baked-in colour.
  */
 export function techIconUrl(
   name: string,
   iconSlug?: string | null,
   color?: string | null,
-): string {
-  const slug = iconSlug?.trim() || deriveSlug(name);
-  const tint = color?.trim();
+): string | null {
+  if (!iconSlug?.trim()) {
+    const mapped = ICON_OVERRIDES[name.trim().toLowerCase()];
+    if (mapped?.startsWith("/")) return mapped;
+  }
+  const slug = iconSlugFor(name, iconSlug);
+  if (!slug) return null;
+  const tint = color?.trim() || LIGHT_ICONS[slug];
   return tint
     ? `https://cdn.simpleicons.org/${slug}/${tint}`
     : `https://cdn.simpleicons.org/${slug}`;

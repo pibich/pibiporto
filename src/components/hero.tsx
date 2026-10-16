@@ -2,24 +2,75 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const TAGLINE = "Web Developer · UI/UX Designer · Content Creator";
+import { FaLinkedinIn } from "react-icons/fa6";
+import { SiGithub, SiWhatsapp, SiYoutube } from "react-icons/si";
 
 // Taruh filenya di public/ — buka di tab baru supaya PDF-nya tidak
 // menggantikan halaman portofolio. (%20 = spasi di nama file.)
 const CV_URL = "/CV_Vincent%20Bryan.pdf";
 
-export function Hero() {
-  const [typed, setTyped] = useState("");
+const ROLES = [
+  "Software Developer",
+  "Website & Mobile",
+  "Frontend",
+  "Content Creator",
+];
 
+const SOCIALS = [
+  { label: "GitHub", href: "https://github.com/pibich", Icon: SiGithub },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/in/vincentbryanid",
+    Icon: FaLinkedinIn,
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@pibichori",
+    Icon: SiYoutube,
+  },
+  {
+    label: "WhatsApp",
+    href: "https://wa.me/6285920637925",
+    Icon: SiWhatsapp,
+  },
+];
+
+export function Hero() {
+  const [text, setText] = useState("");
+
+  // Efek ketik lalu hapus, looping ke role berikutnya.
   useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      i++;
-      setTyped(TAGLINE.slice(0, i));
-      if (i >= TAGLINE.length) clearInterval(timer);
-    }, 55);
-    return () => clearInterval(timer);
+    let roleIdx = 0;
+    let len = 0;
+    let deleting = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      const word = ROLES[roleIdx];
+      if (!deleting) {
+        len = Math.min(len + 1, word.length);
+        setText(word.slice(0, len));
+        if (len === word.length) {
+          deleting = true;
+          timer = setTimeout(tick, 1500);
+          return;
+        }
+        timer = setTimeout(tick, 55);
+      } else {
+        len = Math.max(len - 1, 0);
+        setText(word.slice(0, len));
+        if (len === 0) {
+          deleting = false;
+          roleIdx = (roleIdx + 1) % ROLES.length;
+          timer = setTimeout(tick, 350);
+          return;
+        }
+        timer = setTimeout(tick, 28);
+      }
+    };
+
+    timer = setTimeout(tick, 400);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -29,14 +80,10 @@ export function Hero() {
         Vincent Bryan
       </h1>
       <div className="mt-3 min-h-[26px] font-mono text-[19px] text-acc">
-        {typed}
+        {text}
         <span className="ml-[3px] inline-block h-5 w-[9px] translate-y-[3px] animate-[blink_1.1s_step-end_infinite] bg-acc align-baseline" />
       </div>
-      <p className="mt-[22px] max-w-[520px] text-[17px] leading-[1.65] text-body text-pretty">
-        Saya membangun website yang sederhana dan enak dipandang — fokus pada
-        detail tampilan, kecepatan, dan pengalaman pengguna.
-      </p>
-      <div className="mt-[34px] flex flex-wrap gap-[14px]">
+      <div className="mt-[34px] flex flex-wrap items-center gap-[14px]">
         <Link
           href="#projects"
           className="rounded-lg bg-acc px-[22px] py-3 font-mono text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-85"
@@ -57,6 +104,20 @@ export function Hero() {
         >
           Contact Me
         </Link>
+        <div className="flex items-center gap-3">
+          {SOCIALS.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-strong text-body transition-colors hover:border-acc hover:text-acc"
+            >
+              <Icon className="text-[15px]" aria-hidden />
+            </a>
+          ))}
+        </div>
       </div>
     </header>
   );

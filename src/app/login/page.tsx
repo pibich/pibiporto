@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 const inputClass =
   "rounded-lg border border-line-input bg-bg px-[14px] py-3 font-sans text-[14.5px] text-ink outline-none focus:border-acc";
-const labelClass = "font-mono text-[11.5px] text-muted";
+const labelClass = "text-[11.5px] text-muted";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +15,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+
+  // Sudah login? Langsung ke /admin tanpa perlu isi form lagi.
+  useEffect(() => {
+    let active = true;
+    createClient()
+      .auth.getUser()
+      .then(({ data: { user } }) => {
+        if (active && user) router.replace("/admin");
+      });
+    return () => {
+      active = false;
+    };
+  }, [router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,10 +53,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-7">
+    <div className="flex min-h-dvh items-center justify-center bg-bg px-7">
       <div className="w-[400px] max-w-full">
         <div className="text-center">
-          <div className="font-mono text-sm text-muted">
+          <div className="text-sm text-muted">
             $ sudo login
             <span className="ml-1 inline-block h-4 w-2 translate-y-[2px] animate-[blink_1.1s_step-end_infinite] bg-acc" />
           </div>
@@ -87,19 +100,17 @@ export default function LoginPage() {
               className={inputClass}
             />
           </div>
-          {error && (
-            <div className="font-mono text-[12px] text-danger">{error}</div>
-          )}
+          {error && <div className="text-[12px] text-danger">{error}</div>}
           <button
             type="submit"
             disabled={pending}
-            className="mt-1 rounded-lg bg-acc py-[13px] text-center font-mono text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
+            className="mt-1 rounded-lg bg-acc py-[13px] text-center text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
           >
             {pending ? "Memproses…" : "Masuk →"}
           </button>
         </form>
 
-        <div className="mt-5 text-center font-mono text-[11.5px] leading-[1.7] text-hint">
+        <div className="mt-5 text-center text-[11.5px] leading-[1.7] text-hint">
           <Link
             href="/"
             className="text-muted transition-colors hover:text-ink"

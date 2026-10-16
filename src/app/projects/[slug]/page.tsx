@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Markdown } from "@/components/markdown";
 import { SiteFooter } from "@/components/site-footer";
-import { SiteNav } from "@/components/site-nav";
 import { getProjectBySlug } from "@/lib/data";
 import { fetchReadme, parseRepo } from "@/lib/github";
 
@@ -70,9 +69,7 @@ export default async function ProjectDetailPage({
 
   return (
     <>
-      <SiteNav />
-
-      <article className="mx-auto max-w-[820px] px-7 py-[56px]">
+      <article className="mx-auto max-w-[820px] px-7 pt-10 pb-[56px]">
         <Link
           href="/#projects"
           className="font-mono text-[12.5px] text-muted transition-colors hover:text-ink"
@@ -113,7 +110,7 @@ export default async function ProjectDetailPage({
             {project.tech.map((t) => (
               <span
                 key={t}
-                className="rounded-[5px] bg-chip px-[9px] py-1 font-mono text-[11px] text-body"
+                className="rounded-lg bg-chip px-[9px] py-1 font-mono text-[11px] text-body"
               >
                 {t}
               </span>
@@ -122,7 +119,7 @@ export default async function ProjectDetailPage({
         )}
 
         {project.image_url && (
-          <div className="relative mt-7 h-[320px] w-full overflow-hidden rounded-[14px] border border-line bg-chip">
+          <div className="relative mt-7 aspect-video w-full overflow-hidden rounded-xl border border-line bg-chip">
             <Image
               src={project.image_url}
               alt={project.title}

@@ -1,0 +1,1093 @@
+{
+  "url": "http://localhost:3000",
+  "at": "2026-10-16T17:34:11.519Z",
+  "allow": [],
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "load": "load",
+      "screens": 6,
+      "filled": [0.46, 0.93, 0.3, 0.34, 0.12, 0.26],
+      "motion": {
+        "elements": 17,
+        "css": 4,
+        "transitions": 12,
+        "scripted": 1,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 1440,
+          "h": 900
+        },
+        "page": {
+          "height": 4999,
+          "screens": 5.6,
+          "words": 291,
+          "img": 32,
+          "video": 0,
+          "canvas": 0,
+          "svg": 1,
+          "sections": 5,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 1,
+          "uiAbuse": false,
+          "realPictures": 7,
+          "videoCount": 0,
+          "uiPictures": 1,
+          "pictureSamples": [
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FqIPnF",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FoV7zI",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FV6kop"
+          ],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": []
+        },
+        "hero": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "chars": 47,
+          "lines": 2,
+          "size": 60,
+          "vw": 4.2,
+          "font": "TikTok Sans",
+          "weight": 500,
+          "tracking": -0.015,
+          "leading": 1.05,
+          "upper": false,
+          "italic": false,
+          "mono": false,
+          "align": "left",
+          "position": "left",
+          "widthRatio": 0.44,
+          "top": 602,
+          "tag": "h1",
+          "kind": "heading"
+        },
+        "h1": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "lines": 2,
+          "size": 60,
+          "font": "TikTok Sans"
+        },
+        "headings": [
+          {
+            "text": "Vincent Bryan — Software developer web & mobile",
+            "words": 8,
+            "chars": 47,
+            "lines": 2,
+            "size": 60,
+            "vw": 4.2,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.015,
+            "leading": 1.05,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.44,
+            "top": 602,
+            "tag": "h1",
+            "kind": "heading"
+          },
+          {
+            "text": "Hasil maksimal, pendekatan minimalis.",
+            "words": 4,
+            "chars": 37,
+            "lines": 2,
+            "size": 33.6,
+            "vw": 2.3,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.01,
+            "leading": 1.15,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.33,
+            "top": 976,
+            "tag": "p",
+            "kind": "statement"
+          },
+          {
+            "text": "GROWSTICK",
+            "words": 1,
+            "chars": 9,
+            "lines": 1,
+            "size": 80,
+            "vw": 5.6,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.49,
+            "top": 1942,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "TCG AUCTION",
+            "words": 2,
+            "chars": 11,
+            "lines": 1,
+            "size": 80,
+            "vw": 5.6,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.54,
+            "top": 2078,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "PWTOOLS",
+            "words": 1,
+            "chars": 7,
+            "lines": 1,
+            "size": 80,
+            "vw": 5.6,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.4,
+            "top": 2215,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "VINCENT BRYAN",
+            "words": 2,
+            "chars": 13,
+            "lines": 1,
+            "size": 123.8,
+            "vw": 8.6,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.015,
+            "leading": 0.9,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 1,
+            "top": 4772,
+            "tag": "div",
+            "kind": "heading"
+          }
+        ],
+        "headingSummary": {
+          "count": 6,
+          "maxLines": 2,
+          "over2Lines": 0,
+          "statements": 1,
+          "centered": 0,
+          "medianWords": 2,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "TikTok Sans",
+              "share": 1,
+              "mono": false
+            }
+          ],
+          "familyCount": 1,
+          "sizes": [14, 19, 26, 34, 60, 80, 124],
+          "sizeCount": 7,
+          "notLoaded": [],
+          "body": {
+            "font": "TikTok Sans",
+            "size": 19,
+            "leading": 1.6,
+            "weight": 400,
+            "tracking": 0,
+            "contrast": 11
+          },
+          "measureChars": 57,
+          "max": {
+            "size": 123.8,
+            "vw": 8.6,
+            "font": "TikTok Sans",
+            "text": "Vincent Bryan"
+          },
+          "monoShare": 0,
+          "monoProseShare": 0,
+          "monoFamilies": [],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0.03,
+          "centerShare": 0,
+          "smallText": 0
+        },
+        "eyebrows": [],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#0e1116",
+          "bodyBgHsl": {
+            "h": 218,
+            "s": 0.22,
+            "l": 0.07
+          },
+          "dark": true,
+          "sectionBgs": [
+            {
+              "color": "#141920",
+              "top": 0,
+              "hsl": {
+                "h": 215,
+                "s": 0.23,
+                "l": 0.1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#c4cdd6",
+              "share": 0.45
+            },
+            {
+              "color": "#e6edf3",
+              "share": 0.3
+            },
+            {
+              "color": "#9aa4b0",
+              "share": 0.15
+            },
+            {
+              "color": "#7d8894",
+              "share": 0.07
+            },
+            {
+              "color": "#5ba3f5",
+              "share": 0.03
+            }
+          ],
+          "button": {
+            "bg": "#5ba3f5",
+            "hsl": {
+              "h": 212,
+              "s": 0.89,
+              "l": 0.66
+            },
+            "fg": "#0e1116"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 2,
+          "inHero": 1,
+          "radius": 12,
+          "height": 48,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": ["Lihat kerja"]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 0,
+          "hairlineSamples": [],
+          "outlinedBoxes": 0,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 7,
+          "boxRadius": 12,
+          "squareMedia": 0,
+          "roundedMedia": 7,
+          "mediaRadius": 12,
+          "textShadow": 0,
+          "cardRows": []
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 1,
+          "fixed": false,
+          "height": 900,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": ["tiktok sans", "__nextjs-geist"]
+      },
+      "consoleErrors": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "load": "load",
+      "screens": 6,
+      "filled": [0.57, 0.91, 0.74, 0.73, 0.35, 0.18],
+      "motion": {
+        "elements": 17,
+        "css": 4,
+        "transitions": 12,
+        "scripted": 1,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 768,
+          "h": 1024
+        },
+        "page": {
+          "height": 5965,
+          "screens": 5.8,
+          "words": 291,
+          "img": 32,
+          "video": 0,
+          "canvas": 0,
+          "svg": 1,
+          "sections": 5,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 1,
+          "uiAbuse": false,
+          "realPictures": 7,
+          "videoCount": 0,
+          "uiPictures": 1,
+          "pictureSamples": [
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FqIPnF",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FoV7zI",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FV6kop"
+          ],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": []
+        },
+        "hero": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "chars": 47,
+          "lines": 2,
+          "size": 43,
+          "vw": 5.6,
+          "font": "TikTok Sans",
+          "weight": 500,
+          "tracking": -0.015,
+          "leading": 1.05,
+          "upper": false,
+          "italic": false,
+          "mono": false,
+          "align": "left",
+          "position": "center",
+          "widthRatio": 0.94,
+          "top": 136,
+          "tag": "h1",
+          "kind": "heading"
+        },
+        "h1": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "lines": 2,
+          "size": 43,
+          "font": "TikTok Sans"
+        },
+        "headings": [
+          {
+            "text": "Vincent Bryan — Software developer web & mobile",
+            "words": 8,
+            "chars": 47,
+            "lines": 2,
+            "size": 43,
+            "vw": 5.6,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.015,
+            "leading": 1.05,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.94,
+            "top": 136,
+            "tag": "h1",
+            "kind": "heading"
+          },
+          {
+            "text": "Hasil maksimal, pendekatan minimalis.",
+            "words": 4,
+            "chars": 37,
+            "lines": 2,
+            "size": 26.9,
+            "vw": 3.5,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.01,
+            "leading": 1.15,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.5,
+            "top": 1082,
+            "tag": "p",
+            "kind": "statement"
+          },
+          {
+            "text": "GROWSTICK",
+            "words": 1,
+            "chars": 9,
+            "lines": 1,
+            "size": 59,
+            "vw": 7.7,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.67,
+            "top": 2749,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "TCG AUCTION",
+            "words": 2,
+            "chars": 11,
+            "lines": 1,
+            "size": 59,
+            "vw": 7.7,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.74,
+            "top": 3282,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "PWTOOLS",
+            "words": 1,
+            "chars": 7,
+            "lines": 1,
+            "size": 59,
+            "vw": 7.7,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.55,
+            "top": 3816,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "VINCENT BRYAN",
+            "words": 2,
+            "chars": 13,
+            "lines": 1,
+            "size": 66,
+            "vw": 8.6,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.015,
+            "leading": 0.9,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 1,
+            "top": 5820,
+            "tag": "div",
+            "kind": "heading"
+          }
+        ],
+        "headingSummary": {
+          "count": 6,
+          "maxLines": 2,
+          "over2Lines": 0,
+          "statements": 1,
+          "centered": 0,
+          "medianWords": 2,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "TikTok Sans",
+              "share": 1,
+              "mono": false
+            }
+          ],
+          "familyCount": 1,
+          "sizes": [14, 18, 23, 27, 43, 59, 66],
+          "sizeCount": 7,
+          "notLoaded": [],
+          "body": {
+            "font": "TikTok Sans",
+            "size": 18.3,
+            "leading": 1.6,
+            "weight": 400,
+            "tracking": 0,
+            "contrast": 11
+          },
+          "measureChars": 59,
+          "max": {
+            "size": 66,
+            "vw": 8.6,
+            "font": "TikTok Sans",
+            "text": "Vincent Bryan"
+          },
+          "monoShare": 0,
+          "monoProseShare": 0,
+          "monoFamilies": [],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0.03,
+          "centerShare": 0,
+          "smallText": 0
+        },
+        "eyebrows": [],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#0e1116",
+          "bodyBgHsl": {
+            "h": 218,
+            "s": 0.22,
+            "l": 0.07
+          },
+          "dark": true,
+          "sectionBgs": [
+            {
+              "color": "#141920",
+              "top": 373,
+              "hsl": {
+                "h": 215,
+                "s": 0.23,
+                "l": 0.1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#c4cdd6",
+              "share": 0.45
+            },
+            {
+              "color": "#e6edf3",
+              "share": 0.3
+            },
+            {
+              "color": "#9aa4b0",
+              "share": 0.15
+            },
+            {
+              "color": "#7d8894",
+              "share": 0.07
+            },
+            {
+              "color": "#5ba3f5",
+              "share": 0.03
+            }
+          ],
+          "button": {
+            "bg": "#5ba3f5",
+            "hsl": {
+              "h": 212,
+              "s": 0.89,
+              "l": 0.66
+            },
+            "fg": "#0e1116"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 2,
+          "inHero": 1,
+          "radius": 12,
+          "height": 48,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": ["Lihat kerja"]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 0,
+          "hairlineSamples": [],
+          "outlinedBoxes": 0,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 9,
+          "boxRadius": 12,
+          "squareMedia": 0,
+          "roundedMedia": 4,
+          "mediaRadius": 12,
+          "textShadow": 0,
+          "cardRows": []
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 1,
+          "fixed": false,
+          "height": 1024,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": ["tiktok sans", "__nextjs-geist"]
+      },
+      "consoleErrors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "load": "load",
+      "screens": 8,
+      "filled": [0.41, 0.87, 0.66, 0.87, 0.6, 0.47, 0.33, 0.34],
+      "motion": {
+        "elements": 17,
+        "css": 4,
+        "transitions": 12,
+        "scripted": 1,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 406,
+          "h": 879
+        },
+        "page": {
+          "height": 6237,
+          "screens": 7.1,
+          "words": 291,
+          "img": 32,
+          "video": 0,
+          "canvas": 0,
+          "svg": 1,
+          "sections": 5,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 1,
+          "uiAbuse": false,
+          "realPictures": 7,
+          "videoCount": 0,
+          "uiPictures": 1,
+          "pictureSamples": [
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Flvswaokadaaxxkuunlib.sup",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FqIPnF",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FoV7zI",
+            "image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FV6kop"
+          ],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": []
+        },
+        "hero": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "chars": 47,
+          "lines": 2,
+          "size": 31.7,
+          "vw": 7.8,
+          "font": "TikTok Sans",
+          "weight": 500,
+          "tracking": -0.015,
+          "leading": 1.05,
+          "upper": false,
+          "italic": false,
+          "mono": false,
+          "align": "left",
+          "position": "center",
+          "widthRatio": 0.86,
+          "top": 98,
+          "tag": "h1",
+          "kind": "heading"
+        },
+        "h1": {
+          "text": "Vincent Bryan — Software developer web & mobile",
+          "words": 8,
+          "lines": 2,
+          "size": 31.7,
+          "font": "TikTok Sans"
+        },
+        "headings": [
+          {
+            "text": "Vincent Bryan — Software developer web & mobile",
+            "words": 8,
+            "chars": 47,
+            "lines": 2,
+            "size": 31.7,
+            "vw": 7.8,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.015,
+            "leading": 1.05,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.86,
+            "top": 98,
+            "tag": "h1",
+            "kind": "heading"
+          },
+          {
+            "text": "Hasil maksimal, pendekatan minimalis.",
+            "words": 4,
+            "chars": 37,
+            "lines": 2,
+            "size": 24,
+            "vw": 5.9,
+            "font": "TikTok Sans",
+            "weight": 500,
+            "tracking": -0.01,
+            "leading": 1.15,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.7,
+            "top": 896,
+            "tag": "p",
+            "kind": "statement"
+          },
+          {
+            "text": "GROWSTICK",
+            "words": 1,
+            "chars": 9,
+            "lines": 1,
+            "size": 44,
+            "vw": 10.8,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.95,
+            "top": 2549,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "TCG AUCTION",
+            "words": 2,
+            "chars": 11,
+            "lines": 2,
+            "size": 44,
+            "vw": 10.8,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.95,
+            "top": 2878,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "PWTOOLS",
+            "words": 1,
+            "chars": 7,
+            "lines": 1,
+            "size": 44,
+            "vw": 10.8,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.01,
+            "leading": 1,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.78,
+            "top": 3251,
+            "tag": "span",
+            "kind": "heading"
+          },
+          {
+            "text": "VINCENT BRYAN",
+            "words": 2,
+            "chars": 13,
+            "lines": 1,
+            "size": 33.6,
+            "vw": 8.3,
+            "font": "TikTok Sans",
+            "weight": 800,
+            "tracking": -0.015,
+            "leading": 0.9,
+            "upper": true,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "center",
+            "widthRatio": 0.96,
+            "top": 6080,
+            "tag": "div",
+            "kind": "heading"
+          }
+        ],
+        "headingSummary": {
+          "count": 6,
+          "maxLines": 2,
+          "over2Lines": 0,
+          "statements": 1,
+          "centered": 0,
+          "medianWords": 2,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "TikTok Sans",
+              "share": 1,
+              "mono": false
+            }
+          ],
+          "familyCount": 1,
+          "sizes": [13, 17, 20, 24, 32, 34, 44],
+          "sizeCount": 7,
+          "notLoaded": [],
+          "body": {
+            "font": "TikTok Sans",
+            "size": 17.2,
+            "leading": 1.6,
+            "weight": 400,
+            "tracking": 0,
+            "contrast": 11
+          },
+          "measureChars": 33,
+          "max": {
+            "size": 44,
+            "vw": 10.8,
+            "font": "TikTok Sans",
+            "text": "GrowStick"
+          },
+          "monoShare": 0,
+          "monoProseShare": 0,
+          "monoFamilies": [],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0.03,
+          "centerShare": 0,
+          "smallText": 0
+        },
+        "eyebrows": [],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#0e1116",
+          "bodyBgHsl": {
+            "h": 218,
+            "s": 0.22,
+            "l": 0.07
+          },
+          "dark": true,
+          "sectionBgs": [
+            {
+              "color": "#141920",
+              "top": 332,
+              "hsl": {
+                "h": 215,
+                "s": 0.23,
+                "l": 0.1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#c4cdd6",
+              "share": 0.45
+            },
+            {
+              "color": "#e6edf3",
+              "share": 0.3
+            },
+            {
+              "color": "#9aa4b0",
+              "share": 0.15
+            },
+            {
+              "color": "#7d8894",
+              "share": 0.07
+            },
+            {
+              "color": "#5ba3f5",
+              "share": 0.03
+            }
+          ],
+          "button": {
+            "bg": "#5ba3f5",
+            "hsl": {
+              "h": 212,
+              "s": 0.89,
+              "l": 0.66
+            },
+            "fg": "#0e1116"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 2,
+          "inHero": 1,
+          "radius": 12,
+          "height": 48,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": ["Lihat kerja"]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 0,
+          "hairlineSamples": [],
+          "outlinedBoxes": 0,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 9,
+          "boxRadius": 12,
+          "squareMedia": 0,
+          "roundedMedia": 7,
+          "mediaRadius": 12,
+          "textShadow": 0,
+          "cardRows": []
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 1,
+          "fixed": false,
+          "height": 844,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": ["tiktok sans", "__nextjs-geist"]
+      },
+      "consoleErrors": []
+    }
+  ],
+  "findings": [
+    {
+      "level": "WARN",
+      "id": "no-footage",
+      "width": 1440,
+      "message": "No video anywhere on the page.",
+      "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+    }
+  ],
+  "images": [
+    {
+      "viewport": "desktop",
+      "width": 1440,
+      "fold": "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\desktop-fold.jpg",
+      "pages": [
+        "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\desktop-page-01.jpg",
+        "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\desktop-page-02.jpg"
+      ]
+    },
+    {
+      "viewport": "tablet",
+      "width": 768,
+      "fold": "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\tablet-fold.jpg",
+      "pages": [
+        "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\tablet-page-01.jpg"
+      ]
+    },
+    {
+      "viewport": "mobile",
+      "width": 390,
+      "fold": "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\mobile-fold.jpg",
+      "pages": [
+        "C:\\Users\\PIBI\\OneDrive\\Documents\\pibiporto\\.taste-skill\\inspect\\mobile-page-01.jpg"
+      ]
+    }
+  ]
+}

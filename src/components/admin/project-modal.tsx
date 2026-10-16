@@ -3,16 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import {
   createProject,
+  importFromGitHub,
   type ProjectInput,
   updateProject,
 } from "@/app/admin/actions";
+import { ImageCropper } from "@/components/admin/image-cropper";
 import { Markdown } from "@/components/markdown";
 import type { DocSource, Project } from "@/lib/types";
 import { uploadImage } from "@/lib/upload";
 
 const inputClass =
   "rounded-lg border border-line-input bg-bg px-[14px] py-[11px] font-sans text-[14.5px] text-ink outline-none focus:border-acc";
-const labelClass = "font-mono text-[11.5px] text-muted";
+const labelClass = "text-[11.5px] text-muted";
 
 export function ProjectModal({
   project,
@@ -47,6 +49,9 @@ export function ProjectModal({
   );
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [originalFile, setOriginalFile] = useState<File | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   // Close on Escape for keyboard accessibility.
@@ -65,8 +70,40 @@ export function ProjectModal({
   }
 
   function pickFile(f: File | null) {
+    if (!f) return;
+    setOriginalFile(f);
+    setCropSrc(URL.createObjectURL(f));
+  }
+
+  function handleCropConfirm(f: File) {
     setFile(f);
-    if (f) setPreview(URL.createObjectURL(f));
+    setPreview(URL.createObjectURL(f));
+    setCropSrc(null);
+  }
+
+  function reopenCrop() {
+    if (originalFile) setCropSrc(URL.createObjectURL(originalFile));
+  }
+
+  async function handleImportGitHub() {
+    if (!repoUrl.trim()) {
+      setError("Isi link repo dulu, lalu klik impor.");
+      return;
+    }
+    setImporting(true);
+    setError(null);
+    const result = await importFromGitHub(repoUrl);
+    setImporting(false);
+    if (!result.ok || !result.data) {
+      setError(result.error ?? "Gagal mengimpor dari GitHub.");
+      return;
+    }
+    const { title: t, description: d, tech: imported } = result.data;
+    if (t) setTitle(t);
+    if (d) setDescription(d);
+    setTech((prev) => [...new Set([...prev, ...imported])]);
+    // project baru: dokumentasi langsung diambil dari README
+    if (!isEdit) setDocSource("github");
   }
 
   async function handleSave() {
@@ -113,7 +150,7 @@ export function ProjectModal({
         type="button"
         aria-label="Tutup dialog"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-[rgba(5,7,10,0.7)] backdrop-blur-[4px]"
+        className="absolute inset-0 cursor-default bg-[rgba(5,7,10,0.7)]"
       />
       <div className="relative max-h-[90vh] w-[520px] max-w-full overflow-auto rounded-2xl border border-line-input bg-panel p-7">
         <div className="flex items-center justify-between">
@@ -123,9 +160,9 @@ export function ProjectModal({
           <button
             type="button"
             onClick={onClose}
-            className="font-mono text-sm text-muted transition-colors hover:text-ink"
+            className="text-sm text-muted transition-colors hover:text-ink"
           >
-            ✕
+            tutup
           </button>
         </div>
 
@@ -151,7 +188,7 @@ export function ProjectModal({
               <button
                 type="button"
                 onClick={() => setShowDescription((v) => !v)}
-                className={`font-mono text-[11px] transition-colors ${
+                className={`text-[11px] transition-colors ${
                   showDescription
                     ? "text-acc hover:opacity-80"
                     : "text-hint hover:text-muted"
@@ -170,8 +207,8 @@ export function ProjectModal({
                 className={`${inputClass} resize-y`}
               />
             ) : (
-              <span className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] text-hint">
-                Deskripsi dinonaktifkan — tidak ditampilkan di kartu maupun
+              <span className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] text-hint">
+                Deskripsi dinonaktifkan: tidak ditampilkan di kartu maupun
                 halaman detail. Teksnya tetap tersimpan.
               </span>
             )}
@@ -204,12 +241,26 @@ export function ProjectModal({
             </div>
           </div>
 
+          <div className="flex flex-wrap items-center gap-[10px]">
+            <button
+              type="button"
+              onClick={handleImportGitHub}
+              disabled={importing || saving}
+              className="rounded-md border border-line-input px-[13px] py-[7px] text-[12px] text-muted transition-colors hover:border-line-hover hover:text-ink disabled:opacity-60"
+            >
+              {importing ? "mengimpor…" : "impor dari GitHub ↗"}
+            </button>
+            <span className="text-[11px] text-hint">
+              isi judul, deskripsi &amp; tech stack otomatis dari repo
+            </span>
+          </div>
+
           <div className="flex flex-col gap-2">
             <span className={labelClass}>tech stack</span>
             <div className="flex flex-wrap gap-2">
               {techOptions.length === 0 && (
-                <span className="font-mono text-[11.5px] text-hint">
-                  Belum ada tech — tambahkan dulu di daftar tech-stack.
+                <span className="text-[11.5px] text-hint">
+                  Belum ada tech, tambahkan dulu di daftar tech-stack.
                 </span>
               )}
               {/* include any tech already on the project even if it was later removed from the list */}
@@ -220,7 +271,7 @@ export function ProjectModal({
                     key={name}
                     type="button"
                     onClick={() => toggleTech(name)}
-                    className={`rounded-md border px-3 py-[6px] font-mono text-[12px] transition-colors ${
+                    className={`rounded-md border px-3 py-[6px] text-[12px] transition-colors ${
                       on
                         ? "border-acc text-acc"
                         : "border-line-input text-muted"
@@ -247,7 +298,7 @@ export function ProjectModal({
                   key={value}
                   type="button"
                   onClick={() => setDocSource(value)}
-                  className={`rounded-md border px-3 py-[6px] font-mono text-[12px] transition-colors ${
+                  className={`rounded-md border px-3 py-[6px] text-[12px] transition-colors ${
                     docSource === value
                       ? "border-acc text-acc"
                       : "border-line-input text-muted"
@@ -260,14 +311,14 @@ export function ProjectModal({
           </div>
 
           {docSource === "none" && (
-            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] leading-[1.7] text-hint">
-              Dokumentasi dinonaktifkan — halaman detail tidak menampilkan
-              bagian dokumentasi. Isi manual (bila ada) tetap tersimpan.
+            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] leading-[1.7] text-hint">
+              Dokumentasi dinonaktifkan: halaman detail tidak menampilkan bagian
+              dokumentasi. Isi manual (bila ada) tetap tersimpan.
             </div>
           )}
 
           {docSource === "github" && (
-            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 font-mono text-[12px] leading-[1.7] text-muted">
+            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] leading-[1.7] text-muted">
               Dokumentasi diambil otomatis dari README repo (
               <span className="text-ink">link repo</span> di atas) dan selalu
               menampilkan versi terbaru. Pastikan link repo terisi. Repo private
@@ -285,7 +336,7 @@ export function ProjectModal({
                 <button
                   type="button"
                   onClick={() => setShowPreview((v) => !v)}
-                  className="font-mono text-[11px] text-muted transition-colors hover:text-ink"
+                  className="text-[11px] text-muted transition-colors hover:text-ink"
                 >
                   {showPreview ? "← tulis" : "pratinjau →"}
                 </button>
@@ -295,7 +346,7 @@ export function ProjectModal({
                   {documentation.trim() ? (
                     <Markdown>{documentation}</Markdown>
                   ) : (
-                    <span className="font-mono text-[12px] text-hint">
+                    <span className="text-[12px] text-hint">
                       Belum ada isi.
                     </span>
                   )}
@@ -309,10 +360,12 @@ export function ProjectModal({
                   placeholder={
                     "## Tentang\nCeritakan project ini…\n\n## Cara pakai\n1. …"
                   }
-                  className={`${inputClass} resize-y font-mono text-[13px] leading-[1.6]`}
+                  className={
+                    `${inputClass} resize-y font-mono text-[13px] leading-[1.6]` /* taste-skill-ignore: editing raw markdown */
+                  }
                 />
               )}
-              <span className="font-mono text-[11px] text-hint">
+              <span className="text-[11px] text-hint">
                 Mendukung Markdown: # judul, **tebal**, - list, `kode`,
                 [link](url).
               </span>
@@ -324,7 +377,7 @@ export function ProjectModal({
             <button
               type="button"
               onClick={() => fileInput.current?.click()}
-              className="flex h-[110px] items-center justify-center overflow-hidden rounded-[10px] border-[1.5px] border-dashed border-line-strong bg-chip font-mono text-[12px] text-hint transition-colors hover:border-acc"
+              className="flex h-[110px] items-center justify-center overflow-hidden rounded-[10px] border-[1.5px] border-dashed border-line-strong bg-chip text-[12px] text-hint transition-colors hover:border-acc"
             >
               {preview ? (
                 // biome-ignore lint/performance/noImgElement: local blob/preview thumbnail in admin form
@@ -334,7 +387,7 @@ export function ProjectModal({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                "klik atau drop gambar di sini"
+                "klik untuk pilih gambar"
               )}
             </button>
             <input
@@ -344,17 +397,29 @@ export function ProjectModal({
               className="hidden"
               onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
             />
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-hint">
+                hasil crop selalu 1920×1080 (16:9)
+              </span>
+              {preview && originalFile && (
+                <button
+                  type="button"
+                  onClick={reopenCrop}
+                  className="text-[11px] text-acc transition-opacity hover:opacity-80"
+                >
+                  crop ulang
+                </button>
+              )}
+            </div>
           </div>
 
-          {error && (
-            <div className="font-mono text-[12px] text-danger">{error}</div>
-          )}
+          {error && <div className="text-[12px] text-danger">{error}</div>}
 
           <div className="mt-2 flex justify-end gap-[10px]">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-line-input px-[18px] py-[11px] font-mono text-[13px] text-muted transition-colors hover:text-ink"
+              className="rounded-lg border border-line-input px-[18px] py-[11px] text-[13px] text-muted transition-colors hover:text-ink"
             >
               batal
             </button>
@@ -362,13 +427,21 @@ export function ProjectModal({
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-lg bg-acc px-[18px] py-[11px] font-mono text-[13px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
+              className="rounded-lg bg-acc px-[18px] py-[11px] text-[13px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
             >
               {saving ? "menyimpan…" : "simpan"}
             </button>
           </div>
         </div>
       </div>
+
+      {cropSrc && (
+        <ImageCropper
+          src={cropSrc}
+          onConfirm={handleCropConfirm}
+          onCancel={() => setCropSrc(null)}
+        />
+      )}
     </div>
   );
 }

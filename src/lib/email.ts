@@ -24,7 +24,7 @@ export async function sendContactNotification(
 
   if (!apiKey || !to) {
     console.warn(
-      "sendContactNotification: RESEND_API_KEY / CONTACT_EMAIL belum diset — email dilewati.",
+      "sendContactNotification: RESEND_API_KEY / CONTACT_EMAIL belum diset; email dilewati.",
     );
     return;
   }
@@ -35,7 +35,7 @@ export async function sendContactNotification(
       from: FROM,
       to,
       replyTo: msg.email, // reply goes straight to the visitor
-      subject: `Pesan baru dari ${msg.name} — portofolio`,
+      subject: `Pesan baru dari ${msg.name} · portofolio`,
       text: `Nama  : ${msg.name}\nEmail : ${msg.email}\n\n${msg.message}`,
     });
     if (error) {

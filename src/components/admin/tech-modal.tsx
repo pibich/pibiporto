@@ -8,21 +8,23 @@ import type { TechCategory, TechItem } from "@/lib/types";
 
 const inputClass =
   "rounded-lg border border-line-input bg-bg px-[14px] py-[11px] font-sans text-[14.5px] text-ink outline-none focus:border-acc";
-const labelClass = "font-mono text-[11.5px] text-muted";
+const labelClass = "text-[11.5px] text-muted";
 
 export function TechModal({
   tech,
+  defaultCategory,
   onClose,
   onSaved,
 }: {
   tech: TechItem | null;
+  defaultCategory?: TechCategory;
   onClose: () => void;
   onSaved: () => void;
 }) {
   const isEdit = !!tech;
   const [name, setName] = useState(tech?.name ?? "");
   const [category, setCategory] = useState<TechCategory>(
-    tech?.category ?? "frontend",
+    tech?.category ?? defaultCategory ?? "frontend",
   );
   const [iconSlug, setIconSlug] = useState(tech?.icon_slug ?? "");
   const [color, setColor] = useState(tech?.color ?? "");
@@ -69,7 +71,7 @@ export function TechModal({
         type="button"
         aria-label="Tutup dialog"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-[rgba(5,7,10,0.7)] backdrop-blur-[4px]"
+        className="absolute inset-0 cursor-default bg-[rgba(5,7,10,0.7)]"
       />
       <div className="relative max-h-[90vh] w-[460px] max-w-full overflow-auto rounded-2xl border border-line-input bg-panel p-7">
         <div className="flex items-center justify-between">
@@ -79,9 +81,9 @@ export function TechModal({
           <button
             type="button"
             onClick={onClose}
-            className="font-mono text-sm text-muted transition-colors hover:text-ink"
+            className="text-sm text-muted transition-colors hover:text-ink"
           >
-            ✕
+            tutup
           </button>
         </div>
 
@@ -161,7 +163,7 @@ export function TechModal({
           <div className="flex items-center gap-3 rounded-lg border border-line-input bg-bg px-[14px] py-3">
             <span className={labelClass}>pratinjau ikon:</span>
             {name.trim() ? (
-              <span className="inline-flex items-center gap-[7px] font-mono text-[13px] text-ink">
+              <span className="inline-flex items-center gap-[7px] text-[13px] text-ink">
                 <TechIcon
                   key={`${name}|${iconSlug}|${color}`}
                   name={name}
@@ -173,25 +175,21 @@ export function TechModal({
                 {name}
               </span>
             ) : (
-              <span className="font-mono text-[12px] text-hint">
-                isi nama dulu
-              </span>
+              <span className="text-[12px] text-hint">isi nama dulu</span>
             )}
           </div>
-          <p className="font-mono text-[11px] text-hint leading-[1.6]">
+          <p className="text-[11px] text-hint leading-[1.6]">
             Ikon diambil otomatis dari Simple Icons berdasarkan nama. Jika tidak
             muncul, isi slug manual (lihat simpleicons.org) atau biarkan kosong.
           </p>
 
-          {error && (
-            <div className="font-mono text-[12px] text-danger">{error}</div>
-          )}
+          {error && <div className="text-[12px] text-danger">{error}</div>}
 
           <div className="mt-2 flex justify-end gap-[10px]">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-line-input px-[18px] py-[11px] font-mono text-[13px] text-muted transition-colors hover:text-ink"
+              className="rounded-lg border border-line-input px-[18px] py-[11px] text-[13px] text-muted transition-colors hover:text-ink"
             >
               batal
             </button>
@@ -199,7 +197,7 @@ export function TechModal({
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-lg bg-acc px-[18px] py-[11px] font-mono text-[13px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
+              className="rounded-lg bg-acc px-[18px] py-[11px] text-[13px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
             >
               {saving ? "menyimpan…" : "simpan"}
             </button>

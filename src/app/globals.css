@@ -7,7 +7,7 @@
 
 @theme inline {
   /* Fonts — variables injected by next/font in layout.tsx */
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   /* Surfaces */
@@ -41,9 +41,31 @@ html {
 }
 
 body {
-  background: var(--color-bg);
+  background:
+    radial-gradient(
+      1100px 520px at 85% -12%,
+      rgb(91 163 245 / 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      800px 420px at 5% 4%,
+      rgb(91 163 245 / 0.05),
+      transparent 55%
+    ), var(--color-bg);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--acc);
+  color: var(--color-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
 }
 
 ::placeholder {
@@ -123,7 +145,7 @@ body {
 .markdown pre {
   background: var(--color-panel);
   border: 1px solid var(--color-line-input);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 16px 18px;
   overflow-x: auto;
 }
@@ -147,7 +169,7 @@ body {
 .markdown img {
   max-width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid var(--color-line);
 }
 .markdown table {

@@ -2,7 +2,12 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-import { fetchReadme, parseRepo } from "@/lib/github";
+import {
+  fetchReadme,
+  fetchRepoMeta,
+  fetchRootFile,
+  parseRepo,
+} from "@/lib/github";
 import { slugify } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import type { DocSource, TechCategory } from "@/lib/types";
@@ -245,8 +250,149 @@ export async function deleteTech(id: string): Promise<ActionResult> {
   }
 }
 
+export async function deleteTechMany(ids: string[]): Promise<ActionResult> {
+  if (ids.length === 0) return { ok: true };
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase.from("tech_stack").delete().in("id", ids);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function updateTechCategoryMany(
+  ids: string[],
+  category: TechCategory,
+): Promise<ActionResult> {
+  if (ids.length === 0) return { ok: true };
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase
+      .from("tech_stack")
+      .update({ category })
+      .in("id", ids);
+    if (error) return { ok: false, error: error.message };
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
 export async function signOut(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
+}
+
+// ─────────────────────────── import dari GitHub ───────────────────────────
+
+// Package/composer dependency → nama di tech-stack. Key sudah di-lowercase.
+const DEP_TO_TECH: Record<string, string> = {
+  next: "Next.js",
+  react: "React",
+  "react-dom": "React",
+  "react-native": "React Native",
+  tailwindcss: "Tailwind CSS",
+  "@tailwindcss/postcss": "Tailwind CSS",
+  "@tailwindcss/cli": "Tailwind CSS",
+  typescript: "TypeScript",
+  laravel: "Laravel",
+  "@supabase/supabase-js": "Supabase",
+  "@supabase/ssr": "Supabase",
+  firebase: "Firebase",
+  "firebase-admin": "Firebase",
+  mysql: "MySQL",
+  mysql2: "MySQL",
+  sqlite3: "SQLite",
+  "better-sqlite3": "SQLite",
+};
+
+function parsePackageJson(content: string | null): string[] {
+  if (!content) return [];
+  try {
+    const pkg = JSON.parse(content);
+    const deps: Record<string, string> = {
+      ...pkg.dependencies,
+      ...pkg.devDependencies,
+    };
+    return Object.keys(deps)
+      .map((dep) => DEP_TO_TECH[dep.toLowerCase()])
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function parseComposerJson(content: string | null): string[] {
+  if (!content) return [];
+  try {
+    const composer = JSON.parse(content);
+    const deps: Record<string, string> = {
+      ...composer.require,
+      ...composer["require-dev"],
+    };
+    return Object.keys(deps)
+      .map((dep) => {
+        const key = dep.toLowerCase();
+        if (key === "php") return "PHP";
+        return DEP_TO_TECH[key];
+      })
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export type GitHubImportData = {
+  title: string;
+  description: string | null;
+  tech: string[];
+};
+
+/**
+ * Read a GitHub repo and suggest project fields: name → title, description,
+ * and tech detected from package.json / composer.json / primary language.
+ * Detected tech is returned as-is; the form shows it as a selected chip even
+ * when the name isn't in the tech-stack list yet.
+ */
+export async function importFromGitHub(
+  repoUrl: string,
+): Promise<ActionResult & { data?: GitHubImportData }> {
+  try {
+    const ref = parseRepo(repoUrl);
+    if (!ref) return { ok: false, error: "Link repo GitHub tidak valid." };
+
+    await requireUser();
+    const [meta, pkg, composer] = await Promise.all([
+      fetchRepoMeta(ref),
+      fetchRootFile(ref, "package.json"),
+      fetchRootFile(ref, "composer.json"),
+    ]);
+    if (!meta.ok) return { ok: false, error: meta.error };
+
+    const candidates = new Set<string>([
+      ...parsePackageJson(pkg.content),
+      ...parseComposerJson(composer.content),
+    ]);
+    if (meta.meta.language) candidates.add(meta.meta.language);
+
+    return {
+      ok: true,
+      data: {
+        title: meta.meta.name,
+        description: meta.meta.description,
+        tech: [...candidates],
+      },
+    };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
 }

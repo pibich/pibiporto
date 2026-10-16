@@ -6,26 +6,26 @@ Setiap item tech-stack punya satu dari kategori berikut. Opsi kategorinya muncul
 di form admin (`+ tambah tech`) dan menentukan kartu mana yang menampilkannya di
 section `## skills-&-tech-stack` homepage.
 
-| Kategori  | Isi (contoh)                                          |
+| Kategori  | Isi                                                   |
 | --------- | ----------------------------------------------------- |
 | frontend  | HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS |
 | backend   | PHP, Laravel, REST API                                |
-| database  | MySQL, PostgreSQL                                     |
+| database  | MySQL, SQLite                                         |
 | baas      | Supabase, Firebase                                    |
 | mobile    | Kotlin (Android Studio), React Native                 |
 | tools     | Git, GitHub, VS Code, Figma, phpMyAdmin               |
-| lainnya   | Python, Java, C++, UI/UX Design                       |
+| lainnya   | Python                                                |
 
 Kode terkait:
 
 - `src/lib/types.ts` — union `TechCategory` (harus sama dengan constraint DB)
-- `src/lib/tech.ts` — `TECH_CATEGORIES`, urutan & label yang tampil
+- `src/lib/tech.ts` — `TECH_CATEGORIES`, urutan & label yang tampil; `ICON_OVERRIDES` untuk nama yang slug Simple Icons-nya tidak bisa diturunkan otomatis (atau ikon lokal di `/public/icons`)
 - `supabase/tech_stack.sql` — skema tabel + data awal
-- `supabase/tech-categories.sql` — migrasi database lama (foundation/learning/design → kategori baru)
+- `supabase/tech-skills-categories.sql` — migrasi terakhir: kategori halus sesuai CV
 
-Database yang sudah berjalan: jalankan `supabase/tech-categories.sql` sekali di
+Database yang sudah berjalan: jalankan `supabase/tech-skills-categories.sql` sekali di
 Supabase SQL Editor. Database baru tidak perlu — `tech_stack.sql` sudah memakai
-kategori baru.
+kategori final.
 
 ## Getting Started
 

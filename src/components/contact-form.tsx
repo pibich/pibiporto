@@ -36,7 +36,7 @@ function ContactFormInner({ onReset }: { onReset: () => void }) {
         <button
           type="button"
           onClick={onReset}
-          className="rounded-md border border-line-input px-[14px] py-[7px] font-mono text-xs text-muted transition-colors hover:text-ink"
+          className="rounded-lg border border-line-input px-[14px] py-[7px] font-mono text-xs text-muted transition-colors hover:text-ink"
         >
           kirim lagi
         </button>

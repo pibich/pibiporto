@@ -49,7 +49,7 @@ export function ProfileSection({
       <button
         type="button"
         onClick={() => fileInput.current?.click()}
-        className="flex h-[72px] w-[72px] flex-none items-center justify-center overflow-hidden rounded-xl border-[1.5px] border-dashed border-line-strong bg-chip font-mono text-[9px] text-hint transition-colors hover:border-acc"
+        className="flex h-[72px] w-[72px] flex-none items-center justify-center overflow-hidden rounded-xl border-[1.5px] border-dashed border-line-strong bg-chip text-[9px] text-hint transition-colors hover:border-acc"
       >
         {profileImageUrl ? (
           // biome-ignore lint/performance/noImgElement: admin thumbnail
@@ -63,22 +63,18 @@ export function ProfileSection({
         )}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="font-mono text-[13px] text-ink">foto profil</div>
-        <div className="mt-1 font-mono text-[11.5px] text-muted">
+        <div className="text-[13px] text-ink">foto profil</div>
+        <div className="mt-1 text-[11.5px] text-muted">
           tampil di section “tentang-saya” homepage
         </div>
-        {error && (
-          <div className="mt-1 font-mono text-[11.5px] text-danger">
-            {error}
-          </div>
-        )}
+        {error && <div className="mt-1 text-[11.5px] text-danger">{error}</div>}
       </div>
       <div className="flex gap-2">
         <button
           type="button"
           onClick={() => fileInput.current?.click()}
           disabled={uploading}
-          className="rounded-md border border-line-input px-[13px] py-[7px] font-mono text-[12px] text-muted transition-colors hover:border-line-hover hover:text-ink disabled:opacity-60"
+          className="rounded-md border border-line-input px-[13px] py-[7px] text-[12px] text-muted transition-colors hover:border-line-hover hover:text-ink disabled:opacity-60"
         >
           {uploading ? "mengunggah…" : profileImageUrl ? "ganti" : "unggah"}
         </button>
@@ -87,7 +83,7 @@ export function ProfileSection({
             type="button"
             onClick={handleRemove}
             disabled={pending}
-            className="rounded-md border border-danger/35 px-[13px] py-[7px] font-mono text-[12px] text-danger transition-colors hover:bg-danger/12"
+            className="rounded-md border border-danger/35 px-[13px] py-[7px] text-[12px] text-danger transition-colors hover:bg-danger/12"
           >
             hapus
           </button>

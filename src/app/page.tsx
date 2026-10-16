@@ -4,7 +4,6 @@ import { Hero } from "@/components/hero";
 import { ProjectCard } from "@/components/project-card";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
-import { SiteNav } from "@/components/site-nav";
 import { TechIcon } from "@/components/tech-icon";
 import { getProjects, getSettings, getTechStack } from "@/lib/data";
 import { TECH_CATEGORIES } from "@/lib/tech";
@@ -51,14 +50,12 @@ export default async function Home() {
 
   return (
     <>
-      <SiteNav />
-
       <Hero />
 
       {/* ── ABOUT ── */}
       <section id="about" className="border-t border-line">
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-start gap-12 px-7 py-[72px] sm:grid-cols-[180px_1fr]">
-          <div className="relative flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-2xl border border-line bg-panel font-mono text-[11px] text-hint">
+          <div className="relative flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-xl border border-line bg-panel font-mono text-[11px] text-hint">
             {settings.profile_image_url ? (
               <Image
                 src={settings.profile_image_url}
@@ -74,12 +71,13 @@ export default async function Home() {
           <div>
             <SectionHeading>## tentang-saya</SectionHeading>
             <p className="mt-[18px] max-w-[640px] text-[16.5px] leading-[1.75] text-prose text-pretty">
-              Halo! Saya Vincent, seorang Website Developer yang percaya bahwa
-              desain terbaik adalah yang sederhana. Berbekal HTML, CSS, dan
-              JavaScript, saat ini saya menekuni Next.js dengan Tailwind CSS dan
-              Supabase untuk membangun aplikasi web modern yang cepat dan rapi.
-              Sebagai UI/UX Designer, saya merancang antarmuka di Figma sebelum
-              menuangkannya ke dalam kode.
+              Software Developer lulusan Teknik Informatika yang berfokus pada
+              pengembangan website dan aplikasi mobile. Terbiasa menangani sisi
+              frontend (React, Next.js, Tailwind CSS, React Native) dan kini
+              memperluas keahlian ke backend (Laravel, REST API, Supabase) untuk
+              membangun solusi end-to-end. Memprioritaskan hasil yang maksimal
+              dengan pendekatan minimalis, yaitu antarmuka yang bersih, efisien,
+              dan tetap memenuhi kebutuhan pengguna.
             </p>
             <p className="mt-[14px] max-w-[640px] text-[16.5px] leading-[1.75] text-prose text-pretty">
               Di luar coding, saya aktif sebagai content creator di YouTube
@@ -176,7 +174,7 @@ export default async function Home() {
                   rel="noopener noreferrer"
                   className="group block"
                 >
-                  <div className="relative h-[160px] w-full overflow-hidden rounded-xl border border-line bg-panel transition-colors group-hover:border-line-hover">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-line bg-panel transition-colors group-hover:border-line-hover">
                     <Image
                       src={v.thumbnail}
                       alt={v.title}
@@ -222,9 +220,24 @@ export default async function Home() {
               <div className="font-mono text-[13px] text-muted">
                 <span className="text-hint">youtube:</span> @pibichori
               </div>
+              <div className="font-mono text-[13px] text-muted">
+                <span className="text-hint">linkedin:</span>{" "}
+                linkedin.com/in/vincentbryanid
+              </div>
+              <div className="font-mono text-[13px] text-muted">
+                <span className="text-hint">whatsapp:</span>{" "}
+                <a
+                  href="https://wa.me/6285920637925"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-ink"
+                >
+                  +62 859-2063-7925
+                </a>
+              </div>
             </div>
           </div>
-          <div className="rounded-[14px] border border-line bg-panel px-7 py-[26px]">
+          <div className="rounded-xl border border-line bg-panel px-7 py-[26px]">
             <ContactForm />
           </div>
         </div>

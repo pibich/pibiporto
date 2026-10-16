@@ -4,8 +4,8 @@ import type { Project } from "@/lib/types";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="group overflow-hidden rounded-[14px] border border-line bg-panel transition-colors hover:border-line-hover">
-      <div className="relative block h-[220px] w-full bg-chip">
+    <article className="group overflow-hidden rounded-xl border border-line bg-panel transition-colors hover:border-line-hover">
+      <div className="relative block aspect-video w-full bg-chip">
         {project.image_url ? (
           <Image
             src={project.image_url}
@@ -20,7 +20,7 @@ export function ProjectCard({ project }: { project: Project }) {
           </div>
         )}
       </div>
-      <div className="px-6 pt-[22px] pb-6">
+      <div className="p-6">
         <h3 className="text-[19px] font-semibold">
           {project.slug ? (
             <Link
@@ -43,7 +43,7 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.tech.map((t) => (
               <span
                 key={t}
-                className="rounded-[5px] bg-chip px-[9px] py-1 font-mono text-[11px] text-body"
+                className="rounded-lg bg-chip px-[9px] py-1 font-mono text-[11px] text-body"
               >
                 {t}
               </span>
