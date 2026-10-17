@@ -6,9 +6,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-dvh bg-bg">
+    <div className="min-h-dvh bg-bg text-ink selection:bg-acc selection:text-bg">
       <AdminNav />
-      <div className="mx-auto max-w-[1080px] px-7 pt-10 pb-20">{children}</div>
+      <main className="mx-auto max-w-[1140px] px-6 sm:px-8 pt-8 pb-24">
+        {children}
+      </main>
     </div>
   );
 }

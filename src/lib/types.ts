@@ -39,3 +39,11 @@ export type Settings = {
   profile_image_url: string | null;
   updated_at: string;
 };
+
+export type Message = {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  created_at: string;
+};

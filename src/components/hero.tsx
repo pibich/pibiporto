@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaLinkedinIn } from "react-icons/fa6";
+import { FiArrowDown, FiDownload, FiMail } from "react-icons/fi";
 import { SiGithub, SiWhatsapp, SiYoutube } from "react-icons/si";
 
-// Taruh filenya di public/ — buka di tab baru supaya PDF-nya tidak
-// menggantikan halaman portofolio. (%20 = spasi di nama file.)
 const CV_URL = "/CV_Vincent%20Bryan.pdf";
 
 const ROLES = [
   "Software Developer",
-  "Website & Mobile",
-  "Frontend",
-  "Content Creator",
+  "Full Stack & Mobile",
+  "Frontend Engineer",
+  "Tech Enthusiast & Creator",
 ];
 
 const SOCIALS = [
@@ -52,7 +51,7 @@ export function Hero() {
         setText(word.slice(0, len));
         if (len === word.length) {
           deleting = true;
-          timer = setTimeout(tick, 1500);
+          timer = setTimeout(tick, 1600);
           return;
         }
         timer = setTimeout(tick, 55);
@@ -74,37 +73,66 @@ export function Hero() {
   }, []);
 
   return (
-    <header id="hero" className="mx-auto max-w-[1080px] px-7 pt-24 pb-[88px]">
-      <div className="font-mono text-sm text-muted">$ whoami</div>
-      <h1 className="mt-[18px] text-[56px] font-bold leading-[1.08] tracking-[-0.02em]">
+    <header
+      id="hero"
+      className="mx-auto max-w-[1100px] px-6 sm:px-8 pt-20 pb-24 md:pt-28 md:pb-32"
+    >
+      {/* Status Pill */}
+      <div className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/70 px-3.5 py-1 text-xs font-mono text-muted backdrop-blur-sm">
+        <span className="flex h-2 w-2 relative">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+        </span>
+        <span>$ whoami • open to opportunities</span>
+      </div>
+
+      {/* Main Title */}
+      <h1 className="mt-6 text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-ink leading-[1.05]">
         Vincent Bryan
       </h1>
-      <div className="mt-3 min-h-[26px] font-mono text-[19px] text-acc">
-        {text}
-        <span className="ml-[3px] inline-block h-5 w-[9px] translate-y-[3px] animate-[blink_1.1s_step-end_infinite] bg-acc align-baseline" />
+
+      {/* Typewriter Subtitle */}
+      <div className="mt-4 flex items-center min-h-[32px] font-mono text-lg sm:text-2xl text-acc font-medium">
+        <span>{text}</span>
+        <span className="ml-1 inline-block h-6 w-2.5 animate-[blink_1.1s_step-end_infinite] bg-acc" />
       </div>
-      <div className="mt-[34px] flex flex-wrap items-center gap-[14px]">
+
+      {/* Bio excerpt */}
+      <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-body">
+        Membangun antarmuka website dan aplikasi modern dengan fokus pada
+        performa, estetika minimalis, dan arsitektur kode yang rapi.
+      </p>
+
+      {/* Action Buttons */}
+      <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
         <Link
           href="#projects"
-          className="rounded-lg bg-acc px-[22px] py-3 font-mono text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-85"
+          className="inline-flex items-center gap-2 rounded-xl bg-acc px-6 py-3 font-mono text-xs sm:text-sm font-semibold text-bg transition-all hover:opacity-90 hover:shadow-lg hover:shadow-acc/25 active:scale-[0.98]"
         >
-          Lihat Project →
+          <span>Jelajahi Project</span>
+          <FiArrowDown className="h-4 w-4 stroke-[2.5]" />
         </Link>
+
         <a
           href={CV_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-lg border border-line-strong px-[22px] py-3 font-mono text-[13.5px] text-ink transition-colors hover:border-acc hover:text-acc"
+          className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-panel/60 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-ink transition-all hover:border-acc hover:text-acc hover:shadow-md"
         >
-          Lihat CV <span className="text-hint">(PDF)</span>
+          <FiDownload className="h-4 w-4" />
+          <span>Unduh CV</span>
         </a>
+
         <Link
           href="#contact"
-          className="rounded-lg border border-line-strong px-[22px] py-3 font-mono text-[13.5px] text-ink transition-colors hover:border-acc hover:text-acc"
+          className="inline-flex items-center gap-2 rounded-xl border border-line-input bg-panel/30 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-muted transition-colors hover:border-line-hover hover:text-ink"
         >
-          Contact Me
+          <FiMail className="h-4 w-4" />
+          <span>Kontak</span>
         </Link>
-        <div className="flex items-center gap-3">
+
+        {/* Social Icons */}
+        <div className="flex items-center gap-2 sm:ml-2">
           {SOCIALS.map(({ label, href, Icon }) => (
             <a
               key={label}
@@ -112,9 +140,10 @@ export function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-strong text-body transition-colors hover:border-acc hover:text-acc"
+              title={label}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-input bg-panel/50 text-muted transition-all hover:border-acc hover:text-acc hover:scale-105"
             >
-              <Icon className="text-[15px]" aria-hidden />
+              <Icon className="text-base" aria-hidden />
             </a>
           ))}
         </div>

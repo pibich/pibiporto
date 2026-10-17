@@ -18,12 +18,14 @@ export default async function AdminProfilePage() {
   return (
     <div>
       <div>
-        <h1 className="text-[26px] font-bold tracking-[-0.01em]">Profil</h1>
-        <p className="mt-[6px] text-[12.5px] text-muted">
-          foto profil tampil di section “tentang-saya” homepage
+        <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-ink">
+          Profil & Pengaturan
+        </h1>
+        <p className="mt-1 text-[13px] text-muted">
+          Kelola aset visual utama website dan pantau status integrasi.
         </p>
       </div>
-      <div className="mt-7">
+      <div className="mt-8">
         <ProfileSection profileImageUrl={settings.profile_image_url} />
       </div>
     </div>

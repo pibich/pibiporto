@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Project, Settings, TechItem } from "@/lib/types";
+import type { Message, Project, Settings, TechItem } from "@/lib/types";
 
 /** Projects for the public homepage / admin list, newest first. */
 export async function getProjects(): Promise<Project[]> {
@@ -66,4 +66,19 @@ export async function getSettings(): Promise<Settings> {
     };
   }
   return data;
+}
+
+/** Contact form submissions for the admin panel, newest first. */
+export async function getMessages(): Promise<Message[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getMessages:", error.message);
+    return [];
+  }
+  return data ?? [];
 }

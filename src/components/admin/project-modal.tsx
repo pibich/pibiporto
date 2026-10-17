@@ -2,6 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+  FiCheck,
+  FiCrop,
+  FiExternalLink,
+  FiFileText,
+  FiGithub,
+  FiGlobe,
+  FiImage,
+  FiInfo,
+  FiLayers,
+  FiLoader,
+  FiUploadCloud,
+  FiX,
+} from "react-icons/fi";
+import {
   createProject,
   importFromGitHub,
   type ProjectInput,
@@ -13,8 +27,10 @@ import type { DocSource, Project } from "@/lib/types";
 import { uploadImage } from "@/lib/upload";
 
 const inputClass =
-  "rounded-lg border border-line-input bg-bg px-[14px] py-[11px] font-sans text-[14.5px] text-ink outline-none focus:border-acc";
-const labelClass = "text-[11.5px] text-muted";
+  "w-full rounded-xl border border-line-input bg-bg px-3.5 py-2.5 text-sm text-ink placeholder:text-hint outline-none transition-all focus:border-acc focus:ring-1 focus:ring-acc";
+const labelClass = "text-xs font-semibold text-muted tracking-wide uppercase";
+
+type ModalTab = "info" | "tech" | "docs" | "image";
 
 export function ProjectModal({
   project,
@@ -28,6 +44,9 @@ export function ProjectModal({
   onSaved: () => void;
 }) {
   const isEdit = !!project;
+  const [activeTab, setActiveTab] = useState<ModalTab>("info");
+
+  // Form states
   const [title, setTitle] = useState(project?.title ?? "");
   const [description, setDescription] = useState(project?.description ?? "");
   const [showDescription, setShowDescription] = useState(
@@ -42,19 +61,25 @@ export function ProjectModal({
   const [docSource, setDocSource] = useState<DocSource>(
     project?.doc_source ?? "manual",
   );
-  const [showPreview, setShowPreview] = useState(false);
+  const [docPreview, setDocPreview] = useState(false);
+  const [techSearch, setTechSearch] = useState("");
+
+  // Image states
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
     project?.image_url ?? null,
   );
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [importing, setImporting] = useState(false);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  // Close on Escape for keyboard accessibility.
+  // Status states
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importNotice, setImportNotice] = useState<string | null>(null);
+
+  // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -75,9 +100,9 @@ export function ProjectModal({
     setCropSrc(URL.createObjectURL(f));
   }
 
-  function handleCropConfirm(f: File) {
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+  function handleCropConfirm(croppedFile: File) {
+    setFile(croppedFile);
+    setPreview(URL.createObjectURL(croppedFile));
     setCropSrc(null);
   }
 
@@ -87,36 +112,49 @@ export function ProjectModal({
 
   async function handleImportGitHub() {
     if (!repoUrl.trim()) {
-      setError("Isi link repo dulu, lalu klik impor.");
+      setError("Masukkan link repositori GitHub terlebih dahulu.");
+      setActiveTab("info");
       return;
     }
     setImporting(true);
     setError(null);
+    setImportNotice(null);
+
     const result = await importFromGitHub(repoUrl);
     setImporting(false);
+
     if (!result.ok || !result.data) {
       setError(result.error ?? "Gagal mengimpor dari GitHub.");
       return;
     }
+
     const { title: t, description: d, tech: imported } = result.data;
     if (t) setTitle(t);
     if (d) setDescription(d);
-    setTech((prev) => [...new Set([...prev, ...imported])]);
-    // project baru: dokumentasi langsung diambil dari README
+    if (imported && imported.length > 0) {
+      setTech((prev) => [...new Set([...prev, ...imported])]);
+    }
     if (!isEdit) setDocSource("github");
+    setImportNotice(
+      `Berhasil mengimpor metadata GitHub (${imported.length} tech terdeteksi).`,
+    );
   }
 
   async function handleSave() {
     if (!title.trim()) {
-      setError("Judul wajib diisi.");
+      setError("Judul project wajib diisi.");
+      setActiveTab("info");
       return;
     }
+
     setSaving(true);
     setError(null);
+
     try {
       const image_url = file
         ? await uploadImage(file, "project-images")
         : (project?.image_url ?? null);
+
       const payload: ProjectInput = {
         title,
         description,
@@ -128,14 +166,17 @@ export function ProjectModal({
         doc_source: docSource,
         show_description: showDescription,
       };
+
       const result = project
         ? await updateProject(project.id, payload)
         : await createProject(payload);
+
       if (!result.ok) {
-        setError(result.error ?? "Gagal menyimpan.");
+        setError(result.error ?? "Gagal menyimpan project.");
         setSaving(false);
         return;
       }
+
       onSaved();
     } catch (e) {
       setError((e as Error).message);
@@ -143,298 +184,495 @@ export function ProjectModal({
     }
   }
 
+  const allAvailableTech = [...new Set([...techOptions, ...tech])];
+  const filteredTech = allAvailableTech.filter((t) =>
+    t.toLowerCase().includes(techSearch.trim().toLowerCase()),
+  );
+
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
-      {/* Backdrop — a real button so click-to-close is keyboard-accessible */}
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop */}
       <button
         type="button"
         aria-label="Tutup dialog"
+        className="fixed inset-0 cursor-default bg-black/80 backdrop-blur-sm"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-[rgba(5,7,10,0.7)]"
       />
-      <div className="relative max-h-[90vh] w-[520px] max-w-full overflow-auto rounded-2xl border border-line-input bg-panel p-7">
-        <div className="flex items-center justify-between">
-          <h2 className="text-[19px] font-bold">
-            {isEdit ? "Edit Project" : "Tambah Project"}
-          </h2>
+
+      {/* Modal Dialog */}
+      <div className="relative my-8 w-full max-w-2xl rounded-2xl border border-line-input bg-panel shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between border-b border-line px-6 py-4 bg-bg/40">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-acc/10 text-acc">
+              <FiLayers className="h-4 w-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-ink">
+                {isEdit ? "Edit Project" : "Tambah Project Baru"}
+              </h2>
+              <p className="text-[11px] text-muted">
+                {isEdit
+                  ? `Mengubah data "${project.title}"`
+                  : "Isi detail dan unggah screenshot"}
+              </p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-sm text-muted transition-colors hover:text-ink"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted hover:bg-chip hover:text-ink transition-colors"
           >
-            tutup
+            <FiX className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="mt-[22px] flex flex-col gap-[14px]">
-          <div className="flex flex-col gap-[6px]">
-            <label className={labelClass} htmlFor="p-title">
-              judul project
-            </label>
-            <input
-              id="p-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Nama project"
-              className={inputClass}
-            />
-          </div>
-
-          <div className="flex flex-col gap-[6px]">
-            <div className="flex items-center justify-between">
-              <label className={labelClass} htmlFor="p-desc">
-                deskripsi singkat
-              </label>
+        {/* Tab Navigation */}
+        <div className="flex border-b border-line bg-panel/70 px-6 gap-2 overflow-x-auto no-scrollbar">
+          {[
+            { id: "info", label: "Informasi", icon: FiInfo },
+            {
+              id: "tech",
+              label: `Tech Stack (${tech.length})`,
+              icon: FiLayers,
+            },
+            { id: "docs", label: "Dokumentasi", icon: FiFileText },
+            { id: "image", label: "Screenshot", icon: FiImage },
+          ].map((t) => {
+            const Icon = t.icon;
+            const active = activeTab === t.id;
+            return (
               <button
+                key={t.id}
                 type="button"
-                onClick={() => setShowDescription((v) => !v)}
-                className={`text-[11px] transition-colors ${
-                  showDescription
-                    ? "text-acc hover:opacity-80"
-                    : "text-hint hover:text-muted"
+                onClick={() => setActiveTab(t.id as ModalTab)}
+                className={`flex items-center gap-2 py-3 px-3 text-xs font-semibold border-b-2 transition-all ${
+                  active
+                    ? "border-acc text-acc"
+                    : "border-transparent text-muted hover:text-ink"
                 }`}
               >
-                {showDescription ? "● aktif" : "○ nonaktif"}
+                <Icon className="h-3.5 w-3.5" />
+                <span>{t.label}</span>
               </button>
-            </div>
-            {showDescription ? (
-              <textarea
-                id="p-desc"
-                rows={3}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Deskripsi 1-2 kalimat…"
-                className={`${inputClass} resize-y`}
-              />
-            ) : (
-              <span className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] text-hint">
-                Deskripsi dinonaktifkan: tidak ditampilkan di kartu maupun
-                halaman detail. Teksnya tetap tersimpan.
-              </span>
-            )}
-          </div>
+            );
+          })}
+        </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-[6px]">
-              <label className={labelClass} htmlFor="p-demo">
-                link demo
-              </label>
-              <input
-                id="p-demo"
-                value={demoUrl}
-                onChange={(e) => setDemoUrl(e.target.value)}
-                placeholder="https://…"
-                className={inputClass}
-              />
+        {/* Modal Body */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          {error && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 p-3.5 text-xs text-danger">
+              <span className="font-bold">Error:</span>
+              <span className="flex-1">{error}</span>
             </div>
-            <div className="flex flex-col gap-[6px]">
-              <label className={labelClass} htmlFor="p-repo">
-                link repo
-              </label>
-              <input
-                id="p-repo"
-                value={repoUrl}
-                onChange={(e) => setRepoUrl(e.target.value)}
-                placeholder="https://github.com/…"
-                className={inputClass}
-              />
+          )}
+
+          {importNotice && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-success/30 bg-success/10 p-3.5 text-xs text-success">
+              <FiCheck className="h-4 w-4 flex-none mt-0.5" />
+              <span className="flex-1">{importNotice}</span>
             </div>
-          </div>
+          )}
 
-          <div className="flex flex-wrap items-center gap-[10px]">
-            <button
-              type="button"
-              onClick={handleImportGitHub}
-              disabled={importing || saving}
-              className="rounded-md border border-line-input px-[13px] py-[7px] text-[12px] text-muted transition-colors hover:border-line-hover hover:text-ink disabled:opacity-60"
-            >
-              {importing ? "mengimpor…" : "impor dari GitHub ↗"}
-            </button>
-            <span className="text-[11px] text-hint">
-              isi judul, deskripsi &amp; tech stack otomatis dari repo
-            </span>
-          </div>
+          {/* TAB 1: INFORMASI UTAMA */}
+          {activeTab === "info" && (
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className={labelClass} htmlFor="modal-title">
+                  Judul Project <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="modal-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Contoh: Portfolio Website, E-Commerce App..."
+                  className={inputClass}
+                />
+              </div>
 
-          <div className="flex flex-col gap-2">
-            <span className={labelClass}>tech stack</span>
-            <div className="flex flex-wrap gap-2">
-              {techOptions.length === 0 && (
-                <span className="text-[11.5px] text-hint">
-                  Belum ada tech, tambahkan dulu di daftar tech-stack.
-                </span>
-              )}
-              {/* include any tech already on the project even if it was later removed from the list */}
-              {[...new Set([...techOptions, ...tech])].map((name) => {
-                const on = tech.includes(name);
-                return (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className={labelClass} htmlFor="modal-desc">
+                    Deskripsi Singkat
+                  </label>
                   <button
-                    key={name}
                     type="button"
-                    onClick={() => toggleTech(name)}
-                    className={`rounded-md border px-3 py-[6px] text-[12px] transition-colors ${
-                      on
-                        ? "border-acc text-acc"
-                        : "border-line-input text-muted"
+                    onClick={() => setShowDescription((v) => !v)}
+                    className={`text-xs font-semibold transition-colors ${
+                      showDescription
+                        ? "text-acc hover:opacity-80"
+                        : "text-hint hover:text-muted"
                     }`}
                   >
-                    {name}
+                    {showDescription
+                      ? "● Tampil di website"
+                      : "○ Disembunyikan"}
                   </button>
-                );
-              })}
-            </div>
-          </div>
+                </div>
+                {showDescription ? (
+                  <textarea
+                    id="modal-desc"
+                    rows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Jelaskan secara ringkas 1-2 kalimat mengenai project ini..."
+                    className={`${inputClass} resize-y leading-relaxed`}
+                  />
+                ) : (
+                  <div className="rounded-xl border border-line-input bg-bg/50 p-3 text-xs text-hint">
+                    Deskripsi dinonaktifkan: tidak akan ditampilkan di kartu
+                    homepage maupun halaman detail, namun isi teks tetap
+                    tersimpan.
+                  </div>
+                )}
+              </div>
 
-          <div className="flex flex-col gap-2">
-            <span className={labelClass}>sumber dokumentasi</span>
-            <div className="flex gap-2">
-              {(
-                [
-                  ["manual", "tulis manual"],
-                  ["github", "dari README GitHub"],
-                  ["none", "nonaktif"],
-                ] as [DocSource, string][]
-              ).map(([value, label]) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className={labelClass} htmlFor="modal-demo">
+                    Link Live Demo
+                  </label>
+                  <div className="relative">
+                    <FiGlobe className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-hint" />
+                    <input
+                      id="modal-demo"
+                      value={demoUrl}
+                      onChange={(e) => setDemoUrl(e.target.value)}
+                      placeholder="https://my-app.vercel.app"
+                      className={`${inputClass} pl-10`}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className={labelClass} htmlFor="modal-repo">
+                    Link GitHub Repository
+                  </label>
+                  <div className="relative">
+                    <FiGithub className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-hint" />
+                    <input
+                      id="modal-repo"
+                      value={repoUrl}
+                      onChange={(e) => setRepoUrl(e.target.value)}
+                      placeholder="https://github.com/username/repo"
+                      className={`${inputClass} pl-10`}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* GitHub Auto Import */}
+              <div className="rounded-xl border border-line-chip bg-chip/40 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs font-semibold text-ink flex items-center gap-1.5">
+                    <FiGithub className="h-3.5 w-3.5 text-acc" />
+                    <span>Sinkronisasi Otomatis dari GitHub</span>
+                  </div>
+                  <p className="mt-0.5 text-[11px] text-muted">
+                    Ambil nama, deskripsi, dan teknologi otomatis dari
+                    `package.json` repo.
+                  </p>
+                </div>
                 <button
-                  key={value}
                   type="button"
-                  onClick={() => setDocSource(value)}
-                  className={`rounded-md border px-3 py-[6px] text-[12px] transition-colors ${
-                    docSource === value
-                      ? "border-acc text-acc"
-                      : "border-line-input text-muted"
-                  }`}
+                  onClick={handleImportGitHub}
+                  disabled={importing || saving || !repoUrl.trim()}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-line-input bg-panel px-3.5 py-1.5 text-xs font-semibold text-muted transition-colors hover:border-acc hover:text-ink disabled:opacity-40"
                 >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {docSource === "none" && (
-            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] leading-[1.7] text-hint">
-              Dokumentasi dinonaktifkan: halaman detail tidak menampilkan bagian
-              dokumentasi. Isi manual (bila ada) tetap tersimpan.
-            </div>
-          )}
-
-          {docSource === "github" && (
-            <div className="rounded-lg border border-line-input bg-bg px-[14px] py-3 text-[12px] leading-[1.7] text-muted">
-              Dokumentasi diambil otomatis dari README repo (
-              <span className="text-ink">link repo</span> di atas) dan selalu
-              menampilkan versi terbaru. Pastikan link repo terisi. Repo private
-              butuh <span className="text-ink">GITHUB_TOKEN</span> di server.
-              Salinan terakhir disimpan sebagai cadangan saat kamu simpan.
-            </div>
-          )}
-
-          {docSource === "manual" && (
-            <div className="flex flex-col gap-[6px]">
-              <div className="flex items-center justify-between">
-                <label className={labelClass} htmlFor="p-doc">
-                  dokumentasi (markdown)
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowPreview((v) => !v)}
-                  className="text-[11px] text-muted transition-colors hover:text-ink"
-                >
-                  {showPreview ? "← tulis" : "pratinjau →"}
+                  {importing ? (
+                    <>
+                      <FiLoader className="h-3.5 w-3.5 animate-spin text-acc" />
+                      <span>Mengimpor…</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Impor dari Repo</span>
+                      <FiExternalLink className="h-3 w-3" />
+                    </>
+                  )}
                 </button>
               </div>
-              {showPreview ? (
-                <div className="min-h-[160px] rounded-lg border border-line-input bg-bg px-[14px] py-[11px]">
-                  {documentation.trim() ? (
-                    <Markdown>{documentation}</Markdown>
-                  ) : (
-                    <span className="text-[12px] text-hint">
-                      Belum ada isi.
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <textarea
-                  id="p-doc"
-                  rows={10}
-                  value={documentation}
-                  onChange={(e) => setDocumentation(e.target.value)}
-                  placeholder={
-                    "## Tentang\nCeritakan project ini…\n\n## Cara pakai\n1. …"
-                  }
-                  className={
-                    `${inputClass} resize-y font-mono text-[13px] leading-[1.6]` /* taste-skill-ignore: editing raw markdown */
-                  }
-                />
-              )}
-              <span className="text-[11px] text-hint">
-                Mendukung Markdown: # judul, **tebal**, - list, `kode`,
-                [link](url).
-              </span>
             </div>
           )}
 
-          <div className="flex flex-col gap-[6px]">
-            <span className={labelClass}>screenshot</span>
-            <button
-              type="button"
-              onClick={() => fileInput.current?.click()}
-              className="flex h-[110px] items-center justify-center overflow-hidden rounded-[10px] border-[1.5px] border-dashed border-line-strong bg-chip text-[12px] text-hint transition-colors hover:border-acc"
-            >
-              {preview ? (
-                // biome-ignore lint/performance/noImgElement: local blob/preview thumbnail in admin form
-                <img
-                  src={preview}
-                  alt="preview"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                "klik untuk pilih gambar"
+          {/* TAB 2: TECH STACK */}
+          {activeTab === "tech" && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">
+                    Pilih Teknologi ({tech.length} Terpilih)
+                  </h3>
+                  <p className="text-[11px] text-hint">
+                    Klik badge untuk menambah atau menghapus teknologi dari
+                    project ini.
+                  </p>
+                </div>
+                {tech.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setTech([])}
+                    className="text-xs text-danger hover:underline"
+                  >
+                    Hapus Semua
+                  </button>
+                )}
+              </div>
+
+              {/* Search Tech */}
+              <input
+                type="text"
+                value={techSearch}
+                onChange={(e) => setTechSearch(e.target.value)}
+                placeholder="Cari teknologi..."
+                className={inputClass}
+              />
+
+              <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto p-1 border border-line rounded-xl bg-bg/40">
+                {filteredTech.length === 0 ? (
+                  <div className="w-full py-8 text-center text-xs text-hint">
+                    Tidak ada teknologi yang cocok. Tambah dulu di halaman Tech
+                    Stack.
+                  </div>
+                ) : (
+                  filteredTech.map((name) => {
+                    const isSelected = tech.includes(name);
+                    return (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() => toggleTech(name)}
+                        className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
+                          isSelected
+                            ? "border-acc bg-acc/15 text-acc shadow-sm shadow-acc/10"
+                            : "border-line-input bg-panel text-muted hover:border-line-hover hover:text-ink"
+                        }`}
+                      >
+                        {isSelected && (
+                          <FiCheck className="h-3 w-3 stroke-[3]" />
+                        )}
+                        <span>{name}</span>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: DOKUMENTASI */}
+          {activeTab === "docs" && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <span className={labelClass}>Sumber Dokumentasi</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    {
+                      id: "github",
+                      label: "README GitHub",
+                      desc: "Sinkronisasi langsung",
+                      icon: FiGithub,
+                    },
+                    {
+                      id: "manual",
+                      label: "Tulis Manual",
+                      desc: "Markdown tersimpan",
+                      icon: FiFileText,
+                    },
+                    {
+                      id: "none",
+                      label: "Nonaktif",
+                      desc: "Tanpa dokumentasi",
+                      icon: FiX,
+                    },
+                  ].map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setDocSource(s.id as DocSource)}
+                      className={`flex flex-col items-start rounded-xl border p-3 text-left transition-all ${
+                        docSource === s.id
+                          ? "border-acc bg-acc/10 text-ink shadow-sm"
+                          : "border-line-input bg-panel text-muted hover:border-line-hover hover:text-ink"
+                      }`}
+                    >
+                      <span
+                        className={`text-xs font-bold ${docSource === s.id ? "text-acc" : ""}`}
+                      >
+                        {s.label}
+                      </span>
+                      <span className="text-[10px] text-hint mt-0.5">
+                        {s.desc}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {docSource === "github" && (
+                <div className="rounded-xl border border-line bg-bg/50 p-4 text-xs text-muted leading-relaxed space-y-2">
+                  <p>
+                    Dokumentasi akan diambil secara langsung dari file{" "}
+                    <span className="font-mono text-ink">README.md</span> pada
+                    link repositori GitHub di tab Informasi.
+                  </p>
+                  <p className="text-[11px] text-hint">
+                    Pastikan repositori bersifat publik, atau pastikan variabel{" "}
+                    <span className="font-mono text-ink">GITHUB_TOKEN</span>{" "}
+                    sudah terkonfigurasi untuk repositori privat.
+                  </p>
+                </div>
               )}
-            </button>
-            <input
-              ref={fileInput}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
-            />
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-hint">
-                hasil crop selalu 1920×1080 (16:9)
-              </span>
-              {preview && originalFile && (
-                <button
-                  type="button"
-                  onClick={reopenCrop}
-                  className="text-[11px] text-acc transition-opacity hover:opacity-80"
-                >
-                  crop ulang
-                </button>
+
+              {docSource === "none" && (
+                <div className="rounded-xl border border-line bg-bg/50 p-4 text-xs text-hint leading-relaxed">
+                  Bagian dokumentasi tidak akan ditampilkan di halaman detail
+                  project (/projects/{project?.slug ?? "slug"}).
+                </div>
+              )}
+
+              {docSource === "manual" && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className={labelClass} htmlFor="modal-doc-editor">
+                      Konten Markdown
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setDocPreview((v) => !v)}
+                      className="text-xs font-semibold text-acc hover:underline"
+                    >
+                      {docPreview ? "← Mode Editor" : "Pratinjau Hasil →"}
+                    </button>
+                  </div>
+
+                  {docPreview ? (
+                    <div className="min-h-[220px] max-h-[340px] overflow-y-auto rounded-xl border border-line-input bg-bg p-4 text-sm">
+                      {documentation.trim() ? (
+                        <Markdown>{documentation}</Markdown>
+                      ) : (
+                        <p className="text-xs text-hint italic">
+                          Belum ada konten ditulis.
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <textarea
+                      id="modal-doc-editor"
+                      rows={9}
+                      value={documentation}
+                      onChange={(e) => setDocumentation(e.target.value)}
+                      placeholder="## Ringkasan Project&#10;Jelaskan arsitektur, tantangan teknis, dan solusi...&#10;&#10;## Fitur Utama&#10;- Fitur A&#10;- Fitur B"
+                      className={`${inputClass} font-mono text-xs leading-relaxed resize-y`}
+                    />
+                  )}
+                  <p className="text-[11px] text-hint">
+                    Mendukung format Markdown: # Heading, **tebal**, - list,
+                    `kode`, [link](url).
+                  </p>
+                </div>
               )}
             </div>
+          )}
+
+          {/* TAB 4: SCREENSHOT */}
+          {activeTab === "image" && (
+            <div className="space-y-4">
+              <span className={labelClass}>Screenshot Project (16:9 HD)</span>
+
+              <button
+                type="button"
+                onClick={() => fileInput.current?.click()}
+                className="group relative flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-line-strong bg-chip/30 transition-all hover:border-acc hover:bg-chip/50"
+              >
+                {preview ? (
+                  // biome-ignore lint/performance/noImgElement: admin preview
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center gap-2 p-6 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-acc/10 text-acc transition-transform group-hover:scale-110">
+                      <FiUploadCloud className="h-6 w-6" />
+                    </div>
+                    <div className="text-xs font-semibold text-ink">
+                      Klik untuk memilih gambar screenshot
+                    </div>
+                    <div className="text-[11px] text-hint">
+                      Format PNG, JPG, atau WebP. Gambar akan otomatis di-crop
+                      ke format 16:9.
+                    </div>
+                  </div>
+                )}
+              </button>
+
+              <input
+                ref={fileInput}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
+              />
+
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-hint">
+                  Resolusi rekomendasi: 1920×1080 piksel
+                </span>
+                {preview && originalFile && (
+                  <button
+                    type="button"
+                    onClick={reopenCrop}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-acc hover:underline"
+                  >
+                    <FiCrop className="h-3.5 w-3.5" />
+                    <span>Sesuaikan Posisi Crop</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Modal Footer */}
+        <div className="flex items-center justify-between border-t border-line px-6 py-4 bg-bg/40">
+          <div className="text-xs text-hint">
+            {activeTab === "info" && "Tab 1 dari 4"}
+            {activeTab === "tech" && "Tab 2 dari 4"}
+            {activeTab === "docs" && "Tab 3 dari 4"}
+            {activeTab === "image" && "Tab 4 dari 4"}
           </div>
 
-          {error && <div className="text-[12px] text-danger">{error}</div>}
-
-          <div className="mt-2 flex justify-end gap-[10px]">
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-line-input px-[18px] py-[11px] text-[13px] text-muted transition-colors hover:text-ink"
+              className="rounded-xl border border-line-input bg-panel px-4 py-2 text-xs font-semibold text-muted hover:border-line-hover hover:text-ink transition-colors"
             >
-              batal
+              Batal
             </button>
             <button
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-lg bg-acc px-[18px] py-[11px] text-[13px] font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-acc px-5 py-2 text-xs font-semibold text-bg hover:opacity-90 transition-all disabled:opacity-60 shadow-lg shadow-acc/10"
             >
-              {saving ? "menyimpan…" : "simpan"}
+              {saving ? (
+                <>
+                  <FiLoader className="h-3.5 w-3.5 animate-spin" />
+                  <span>Menyimpan…</span>
+                </>
+              ) : (
+                <span>Simpan Project</span>
+              )}
             </button>
           </div>
         </div>
       </div>
 
+      {/* Image Cropper Modal */}
       {cropSrc && (
         <ImageCropper
           src={cropSrc}

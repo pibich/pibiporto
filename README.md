@@ -1,63 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vincent Bryan — Portfolio Website
 
-## Kategori Skill (tech-stack)
+Website portofolio personal milik **Vincent Bryan** yang dirancang dengan estetika minimalis bernuansa terminal developer. Website ini menampilkan rekam jejak proyek website & mobile, daftar keahlian teknologi, integrasi video YouTube, serta dilengkapi panel admin dinamis untuk mengelola konten secara langsung.
 
-Setiap item tech-stack punya satu dari kategori berikut. Opsi kategorinya muncul
-di form admin (`+ tambah tech`) dan menentukan kartu mana yang menampilkannya di
-section `## skills-&-tech-stack` homepage.
+---
 
-| Kategori  | Isi                                                   |
-| --------- | ----------------------------------------------------- |
-| frontend  | HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS |
-| backend   | PHP, Laravel, REST API                                |
-| database  | MySQL, SQLite                                         |
-| baas      | Supabase, Firebase                                    |
-| mobile    | Kotlin (Android Studio), React Native                 |
-| tools     | Git, GitHub, VS Code, Figma, phpMyAdmin               |
-| lainnya   | Python                                                |
+## Fungsi Utama Proyek
 
-Kode terkait:
+1. **Showcase Portofolio Proyek:** Menampilkan katalog karya proyek lengkap dengan deskripsi, teknologi yang digunakan, tautan live demo, repositori GitHub, dan halaman detail dokumentasi teknis (Markdown / sinkronisasi otomatis dari README GitHub).
+2. **Katalog Tech Stack & Skills:** Menampilkan daftar keahlian teknis yang dikelompokkan secara terstruktur (Frontend, Backend, Database, BaaS, Mobile, Tools, Lainnya) dengan ikon brand otomatis dari Simple Icons.
+3. **Formulir Kontak Terintegrasi:** Memungkinkan pengunjung mengirim pesan secara langsung. Pesan disimpan ke database Supabase dan diteruskan otomatis ke email pemilik melalui layanan Resend.
+4. **Feed YouTube Terkini:** Menampilkan video terbaru dari channel YouTube **PIBI Ch.** secara dinamis.
+5. **Panel Admin Terlindungi (`/admin`):** Dashboard manajemen konten yang aman untuk menambah, menyunting, dan menghapus proyek, skill tech stack, foto profil homepage, serta meninjau pesan kontak yang masuk.
 
-- `src/lib/types.ts` — union `TechCategory` (harus sama dengan constraint DB)
-- `src/lib/tech.ts` — `TECH_CATEGORIES`, urutan & label yang tampil; `ICON_OVERRIDES` untuk nama yang slug Simple Icons-nya tidak bisa diturunkan otomatis (atau ikon lokal di `/public/icons`)
-- `supabase/tech_stack.sql` — skema tabel + data awal
-- `supabase/tech-skills-categories.sql` — migrasi terakhir: kategori halus sesuai CV
+---
 
-Database yang sudah berjalan: jalankan `supabase/tech-skills-categories.sql` sekali di
-Supabase SQL Editor. Database baru tidak perlu — `tech_stack.sql` sudah memakai
-kategori final.
+## Tech Stack yang Digunakan
 
-## Getting Started
+* **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Server Components & Server Actions)
+* **Library UI:** [React 19](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
+* **Styling & Desain:** [Tailwind CSS v4](https://tailwindcss.com/) dengan palet dark-mode kustom
+* **Database & Autentikasi:** [Supabase](https://supabase.com/) (PostgreSQL dengan Row-Level Security ketat & Supabase Auth)
+* **Media Storage:** [Supabase Storage](https://supabase.com/storage) (Bucket `project-images` & `site-assets`)
+* **Layanan Email:** [Resend](https://resend.com/) (Notifikasi pesan kontak)
+* **Pemotong Gambar:** [react-easy-crop](https://github.com/ValentinH/react-easy-crop) (Crop visual 16:9 HD sebelum upload)
+* **Dokumentasi Markdown:** [react-markdown](https://github.com/remarkjs/react-markdown) & [remark-gfm](https://github.com/remarkjs/remark-gfm)
+* **Linter & Formatter:** [Biome](https://biomejs.dev/)
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Cara Menjalankan Proyek
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Instal dependensi:**
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Konfigurasi Environment Variables:**
+   Salin file `.env.example` menjadi `.env.local` dan isi kredensial Supabase serta Resend Anda:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Inisialisasi Database Supabase:**
+   Jalankan seluruh isi query pada file [`supabase/schema.sql`](./supabase/schema.sql) di Supabase Dashboard → SQL Editor.
 
-## Learn More
+4. **Jalankan development server:**
+   ```bash
+   npm run dev
+   ```
+   Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
-To learn more about Next.js, take a look at the following resources:
+5. **Akses Dashboard Admin:**
+   Kunjungi [http://localhost:3000/admin](http://localhost:3000/admin) (akan diarahkan ke `/login` untuk memasukkan akun admin Supabase Anda).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Dokumen spesifikasi teknis dan arsitektur mendalam tersedia pada [PRD.md](./PRD.md).
