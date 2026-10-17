@@ -7,13 +7,15 @@ import type { CookieOptionsWithName } from "@supabase/ssr";
  * browser restarts, so the admin stays logged in instead of bouncing back
  * to /login.
  *
- * `httpOnly: true` is honored by the server/proxy writes (Set-Cookie header)
- * and simply ignored by the browser client (document.cookie cannot set it).
+ * `httpOnly: false` is required because `@supabase/ssr`'s browser client
+ * (`createBrowserClient`) needs to read the auth session from `document.cookie`
+ * to perform authenticated client-side requests, such as image uploads to
+ * Supabase Storage with RLS policies requiring the `authenticated` role.
  */
 export const AUTH_COOKIE_OPTIONS: CookieOptionsWithName = {
   maxAge: 60 * 60 * 24 * 30,
   path: "/",
   sameSite: "lax",
   secure: process.env.NODE_ENV === "production",
-  httpOnly: true,
+  httpOnly: false,
 };
