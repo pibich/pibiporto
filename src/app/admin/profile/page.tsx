@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { CvSection } from "@/components/admin/cv-section";
 import { ProfileSection } from "@/components/admin/profile-section";
 import { getSettings } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
@@ -22,11 +23,13 @@ export default async function AdminProfilePage() {
           Profil & Pengaturan
         </h1>
         <p className="mt-1 text-[13px] text-muted">
-          Kelola aset visual utama website dan pantau status integrasi.
+          Kelola aset visual utama website, dokumen CV, dan pantau status
+          integrasi.
         </p>
       </div>
-      <div className="mt-8">
+      <div className="mt-8 space-y-8">
         <ProfileSection profileImageUrl={settings.profile_image_url} />
+        <CvSection cvUrl={settings.cv_url} />
       </div>
     </div>
   );

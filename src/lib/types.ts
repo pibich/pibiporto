@@ -37,6 +37,7 @@ export type Project = {
 export type Settings = {
   id: boolean;
   profile_image_url: string | null;
+  cv_url: string | null;
   updated_at: string;
 };
 

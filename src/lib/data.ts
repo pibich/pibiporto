@@ -62,6 +62,7 @@ export async function getSettings(): Promise<Settings> {
     return {
       id: true,
       profile_image_url: null,
+      cv_url: null,
       updated_at: new Date().toISOString(),
     };
   }

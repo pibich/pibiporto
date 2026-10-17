@@ -1,10 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { FaLinkedinIn } from "react-icons/fa6";
 import {
   FiArrowUpRight,
-  FiExternalLink,
-  FiGithub,
   FiMail,
   FiMapPin,
   FiPlay,
@@ -68,7 +65,7 @@ export default async function Home() {
       <SiteNav />
 
       {/* ── HERO ── */}
-      <Hero />
+      <Hero cvUrl={settings.cv_url} />
 
       {/* ── ABOUT ME ── */}
       <section id="about" className="border-t border-line/80 scroll-mt-16">
@@ -171,7 +168,7 @@ export default async function Home() {
                   className="flex flex-col rounded-2xl border border-line bg-panel p-5 transition-all hover:border-line-hover hover:shadow-lg hover:shadow-black/20"
                 >
                   <div className="font-mono text-xs font-semibold text-muted tracking-wide uppercase border-b border-line/60 pb-2.5 mb-3">
-                    <span className="text-acc mr-1.5">//</span>
+                    <span className="text-acc mr-1.5">{"//"}</span>
                     <span>{cat.label}</span>
                     <span className="text-hint font-normal ml-1">
                       ({cat.items.length})

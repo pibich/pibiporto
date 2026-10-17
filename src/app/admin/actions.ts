@@ -175,6 +175,44 @@ export async function updateProfileImage(
   }
 }
 
+// ─────────────────────────────────── cv / resume ───────────────────────────
+
+export async function updateCvUrl(
+  cv_url: string | null,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const { error } = await supabase
+      .from("settings")
+      .update({
+        cv_url,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", true);
+
+    if (error) {
+      if (
+        error.message.includes("column") &&
+        error.message.includes("cv_url")
+      ) {
+        return {
+          ok: false,
+          error:
+            "Kolom cv_url belum ada di tabel settings Supabase. Silakan jalankan di SQL Editor Supabase: ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS cv_url text;",
+        };
+      }
+      return { ok: false, error: error.message };
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    revalidatePath("/admin/profile");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
 // ─────────────────────────────── tech stack ───────────────────────────────
 
 export type TechInput = {

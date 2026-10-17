@@ -10,7 +10,7 @@ Website portofolio personal milik **Vincent Bryan** yang dirancang dengan esteti
 2. **Katalog Tech Stack & Skills:** Menampilkan daftar keahlian teknis yang dikelompokkan secara terstruktur (Frontend, Backend, Database, BaaS, Mobile, Tools, Lainnya) dengan ikon brand otomatis dari Simple Icons.
 3. **Formulir Kontak Terintegrasi:** Memungkinkan pengunjung mengirim pesan secara langsung. Pesan disimpan ke database Supabase dan diteruskan otomatis ke email pemilik melalui layanan Resend.
 4. **Feed YouTube Terkini:** Menampilkan video terbaru dari channel YouTube **PIBI Ch.** secara dinamis.
-5. **Panel Admin Terlindungi (`/admin`):** Dashboard manajemen konten yang aman untuk menambah, menyunting, dan menghapus proyek, skill tech stack, foto profil homepage, serta meninjau pesan kontak yang masuk.
+5. **Panel Admin Terlindungi (`/admin`):** Dashboard manajemen konten yang aman untuk menambah, menyunting, dan menghapus proyek, skill tech stack, foto profil homepage, dokumen CV / resume, serta meninjau pesan kontak yang masuk.
 
 ---
 

@@ -6,7 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FiArrowDown, FiDownload, FiMail } from "react-icons/fi";
 import { SiGithub, SiWhatsapp, SiYoutube } from "react-icons/si";
 
-const CV_URL = "/CV_Vincent%20Bryan.pdf";
+const DEFAULT_CV_URL = "/CV_Vincent%20Bryan.pdf";
 
 const ROLES = [
   "Software Developer",
@@ -34,8 +34,9 @@ const SOCIALS = [
   },
 ];
 
-export function Hero() {
+export function Hero({ cvUrl }: { cvUrl?: string | null } = {}) {
   const [text, setText] = useState("");
+  const activeCvUrl = cvUrl || DEFAULT_CV_URL;
 
   // Efek ketik lalu hapus, looping ke role berikutnya.
   useEffect(() => {
@@ -114,7 +115,7 @@ export function Hero() {
         </Link>
 
         <a
-          href={CV_URL}
+          href={activeCvUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-panel/60 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-ink transition-all hover:border-acc hover:text-acc hover:shadow-md"
