@@ -10,10 +10,11 @@ import {
 } from "@/lib/github";
 import { slugify } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
-import type { DocSource, TechCategory } from "@/lib/types";
+import type { DocSource, ProjectCategory, TechCategory } from "@/lib/types";
 
 export type ProjectInput = {
   title: string;
+  category?: ProjectCategory | string;
   description: string;
   demo_url: string;
   repo_url: string;
@@ -40,6 +41,7 @@ async function requireUser() {
 function normalize(input: ProjectInput) {
   return {
     title: input.title.trim(),
+    category: input.category ? input.category.trim() : null,
     description: input.description.trim() || null,
     demo_url: input.demo_url.trim() || null,
     repo_url: input.repo_url.trim() || null,
@@ -99,9 +101,18 @@ export async function createProject(
 
     const slug = await uniqueSlug(supabase, row.title);
     const finalRow = await withReadmeBackup(row);
-    const { error } = await supabase
+    let { error } = await supabase
       .from("projects")
       .insert({ ...finalRow, slug });
+
+    if (error?.message.includes("category")) {
+      const { category: _omitted, ...rowWithoutCategory } = finalRow;
+      const retry = await supabase
+        .from("projects")
+        .insert({ ...rowWithoutCategory, slug });
+      error = retry.error;
+    }
+
     if (error) return { ok: false, error: error.message };
 
     revalidatePath("/");
@@ -123,10 +134,20 @@ export async function updateProject(
 
     const slug = await uniqueSlug(supabase, row.title, id);
     const finalRow = await withReadmeBackup(row);
-    const { error } = await supabase
+    let { error } = await supabase
       .from("projects")
       .update({ ...finalRow, slug })
       .eq("id", id);
+
+    if (error?.message.includes("category")) {
+      const { category: _omitted, ...rowWithoutCategory } = finalRow;
+      const retry = await supabase
+        .from("projects")
+        .update({ ...rowWithoutCategory, slug })
+        .eq("id", id);
+      error = retry.error;
+    }
+
     if (error) return { ok: false, error: error.message };
 
     revalidatePath("/");
@@ -241,7 +262,19 @@ export async function createTech(input: TechInput): Promise<ActionResult> {
     if (!row.name) return { ok: false, error: "Nama wajib diisi." };
 
     const { error } = await supabase.from("tech_stack").insert(row);
-    if (error) return { ok: false, error: error.message };
+    if (error) {
+      if (
+        error.message.includes("category_check") ||
+        error.message.includes("check constraint")
+      ) {
+        return {
+          ok: false,
+          error:
+            "Kategori memerlukan pembaruan constraint di Supabase. Silakan jalankan script supabase/add-ai-and-vps-skills.sql di SQL Editor Supabase.",
+        };
+      }
+      return { ok: false, error: error.message };
+    }
 
     revalidatePath("/");
     revalidatePath("/admin");
@@ -264,7 +297,19 @@ export async function updateTech(
       .from("tech_stack")
       .update(row)
       .eq("id", id);
-    if (error) return { ok: false, error: error.message };
+    if (error) {
+      if (
+        error.message.includes("category_check") ||
+        error.message.includes("check constraint")
+      ) {
+        return {
+          ok: false,
+          error:
+            "Kategori memerlukan pembaruan constraint di Supabase. Silakan jalankan script supabase/add-ai-and-vps-skills.sql di SQL Editor Supabase.",
+        };
+      }
+      return { ok: false, error: error.message };
+    }
 
     revalidatePath("/");
     revalidatePath("/admin");

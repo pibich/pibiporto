@@ -2,7 +2,6 @@
 
 import { useActionState, useState } from "react";
 import {
-  FiCheckCircle,
   FiLoader,
   FiMail,
   FiMessageSquare,
@@ -33,16 +32,15 @@ function ContactFormInner({ onReset }: { onReset: () => void }) {
   if (state.ok) {
     return (
       <div className="flex min-h-[300px] flex-col items-center justify-center gap-3.5 text-center p-6">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15 text-success">
-          <FiCheckCircle className="h-6 w-6 stroke-[2.5]" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-acc/15 text-acc">
+          <FiSend className="h-5 w-5" />
         </div>
         <div>
           <h3 className="font-mono text-base font-bold text-ink">
-            $ pesan terkirim ✓
+            $ pesan terkirim
           </h3>
           <p className="mt-1 text-sm text-muted max-w-xs">
-            Terima kasih telah menghubungi! Pesan Anda sudah tersimpan dan saya
-            akan membalas secepatnya.
+            Terima kasih telah menghubungi!
           </p>
         </div>
         <button

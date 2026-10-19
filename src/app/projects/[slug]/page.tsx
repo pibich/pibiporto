@@ -15,6 +15,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { getProjectBySlug } from "@/lib/data";
 import { fetchReadme, parseRepo } from "@/lib/github";
+import { getProjectCategory, PROJECT_CATEGORIES } from "@/lib/project-category";
 
 export const revalidate = 0; // always reflect the latest admin changes
 
@@ -79,6 +80,9 @@ export default async function ProjectDetailPage({
     }
   }
 
+  const category = getProjectCategory(project);
+  const catConfig = PROJECT_CATEGORIES[category];
+
   return (
     <div className="min-h-dvh bg-bg text-ink selection:bg-acc selection:text-bg">
       <SiteNav />
@@ -95,6 +99,18 @@ export default async function ProjectDetailPage({
 
         {/* Project Header */}
         <div className="mt-6 space-y-3">
+          {/* Hashtag Badge */}
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 font-mono text-xs font-semibold tracking-wide ${catConfig.badgeClass}`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${catConfig.dotClass}`}
+              />
+              <span>{catConfig.hashtag}</span>
+            </span>
+          </div>
+
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-ink leading-tight">
             {project.title}
           </h1>
@@ -110,11 +126,11 @@ export default async function ProjectDetailPage({
                 href={project.demo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-acc hover:underline"
+                className="inline-flex items-center gap-1.5 text-acc hover:underline font-semibold"
               >
-                <FiGlobe className="h-3.5 w-3.5" />
+                <FiGlobe className="h-4.5 w-4.5 text-emerald-400" />
                 <span>Live Demo</span>
-                <FiExternalLink className="h-2.5 w-2.5" />
+                <FiExternalLink className="h-3 w-3 opacity-70" />
               </a>
             )}
 
@@ -123,11 +139,11 @@ export default async function ProjectDetailPage({
                 href={project.repo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-muted transition-colors hover:text-ink"
+                className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-ink font-semibold"
               >
-                <FiGithub className="h-3.5 w-3.5" />
+                <FiGithub className="h-4.5 w-4.5 text-ink" />
                 <span>GitHub Repo</span>
-                <FiExternalLink className="h-2.5 w-2.5" />
+                <FiExternalLink className="h-3 w-3 opacity-70" />
               </a>
             )}
           </div>

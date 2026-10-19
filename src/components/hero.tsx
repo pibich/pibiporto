@@ -6,8 +6,6 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FiArrowDown, FiDownload, FiMail } from "react-icons/fi";
 import { SiGithub, SiWhatsapp, SiYoutube } from "react-icons/si";
 
-const DEFAULT_CV_URL = "/CV_Vincent%20Bryan.pdf";
-
 const ROLES = [
   "Software Developer",
   "Full Stack & Mobile",
@@ -16,27 +14,38 @@ const ROLES = [
 ];
 
 const SOCIALS = [
-  { label: "GitHub", href: "https://github.com/pibich", Icon: SiGithub },
+  {
+    label: "GitHub",
+    href: "https://github.com/pibich",
+    Icon: SiGithub,
+    colorClass:
+      "text-white border-white/20 bg-white/5 hover:bg-white/15 hover:border-white/40 hover:shadow-lg hover:shadow-white/10",
+  },
   {
     label: "LinkedIn",
     href: "https://linkedin.com/in/vincentbryanid",
     Icon: FaLinkedinIn,
+    colorClass:
+      "text-[#0a66c2] border-[#0a66c2]/35 bg-[#0a66c2]/10 hover:bg-[#0a66c2]/25 hover:border-[#0a66c2]/70 hover:shadow-lg hover:shadow-[#0a66c2]/20",
   },
   {
     label: "YouTube",
     href: "https://www.youtube.com/@pibichori",
     Icon: SiYoutube,
+    colorClass:
+      "text-[#ff0000] border-[#ff0000]/35 bg-[#ff0000]/10 hover:bg-[#ff0000]/25 hover:border-[#ff0000]/70 hover:shadow-lg hover:shadow-[#ff0000]/20",
   },
   {
     label: "WhatsApp",
     href: "https://wa.me/6285920637925",
     Icon: SiWhatsapp,
+    colorClass:
+      "text-[#25d366] border-[#25d366]/35 bg-[#25d366]/10 hover:bg-[#25d366]/25 hover:border-[#25d366]/70 hover:shadow-lg hover:shadow-[#25d366]/20",
   },
 ];
 
-export function Hero({ cvUrl }: { cvUrl?: string | null } = {}) {
+export function Hero({ cvUrl: _cvUrl }: { cvUrl?: string | null } = {}) {
   const [text, setText] = useState("");
-  const activeCvUrl = cvUrl || DEFAULT_CV_URL;
 
   // Efek ketik lalu hapus, looping ke role berikutnya.
   useEffect(() => {
@@ -115,26 +124,25 @@ export function Hero({ cvUrl }: { cvUrl?: string | null } = {}) {
         </Link>
 
         <a
-          href={activeCvUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-panel/60 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-ink transition-all hover:border-acc hover:text-acc hover:shadow-md"
+          href="/api/cv"
+          download="CV_Vincent_Bryan.pdf"
+          className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-panel/60 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-ink transition-all hover:border-acc hover:text-acc hover:shadow-md active:scale-[0.98]"
         >
-          <FiDownload className="h-4 w-4" />
+          <FiDownload className="h-4 w-4 text-acc" />
           <span>Unduh CV</span>
         </a>
 
         <Link
           href="#contact"
-          className="inline-flex items-center gap-2 rounded-xl border border-line-input bg-panel/30 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-muted transition-colors hover:border-line-hover hover:text-ink"
+          className="inline-flex items-center gap-2 rounded-xl border border-line-input bg-panel/30 px-5 py-3 font-mono text-xs sm:text-sm font-medium text-muted transition-colors hover:border-line-hover hover:text-ink active:scale-[0.98]"
         >
-          <FiMail className="h-4 w-4" />
+          <FiMail className="h-4 w-4 text-emerald-400" />
           <span>Kontak</span>
         </Link>
 
         {/* Social Icons */}
         <div className="flex items-center gap-2 sm:ml-2">
-          {SOCIALS.map(({ label, href, Icon }) => (
+          {SOCIALS.map(({ label, href, Icon, colorClass }) => (
             <a
               key={label}
               href={href}
@@ -142,7 +150,7 @@ export function Hero({ cvUrl }: { cvUrl?: string | null } = {}) {
               rel="noopener noreferrer"
               aria-label={label}
               title={label}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-input bg-panel/50 text-muted transition-all hover:border-acc hover:text-acc hover:scale-105"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all hover:scale-105 active:scale-95 ${colorClass}`}
             >
               <Icon className="text-base" aria-hidden />
             </a>

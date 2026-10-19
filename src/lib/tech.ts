@@ -11,6 +11,7 @@ export const TECH_CATEGORIES: {
   { key: "database", label: "database" },
   { key: "baas", label: "baas" },
   { key: "mobile", label: "mobile" },
+  { key: "ai", label: "ai & agentic" },
   { key: "tools", label: "tools" },
   { key: "lainnya", label: "lainnya" },
 ];
@@ -24,6 +25,20 @@ const ICON_OVERRIDES: Record<string, string> = {
   "react native": "react",
   "rest api": "/icons/rest-api.svg",
   "vs code": "/icons/vscode.svg",
+  antigravity: "/icons/antigravity.svg",
+  "google antigravity": "/icons/antigravity.svg",
+  "model context protocol (mcp)": "/icons/mcp.svg",
+  "model context protocol": "/icons/mcp.svg",
+  mcp: "/icons/mcp.svg",
+  "claude code": "claude",
+  claude: "claude",
+  "github copilot": "githubcopilot",
+  "linux (ubuntu)": "ubuntu",
+  "linux (ubuntu / vps)": "ubuntu",
+  "vps (linux)": "linux",
+  vps: "linux",
+  "mermaid.js": "mermaid",
+  mermaid: "mermaid",
 };
 
 // Simple Icons CDN memakai warna brand asli; beberapa brand nyaris hitam
@@ -38,6 +53,9 @@ const LIGHT_ICONS: Record<string, string> = {
   rust: "e6edf3",
   prisma: "e6edf3",
   opencv: "e6edf3",
+  cursor: "e6edf3",
+  githubcopilot: "e6edf3",
+  markdown: "e6edf3",
 };
 
 /** Slug ikon Simple Icons untuk sebuah nama tech, atau null bila tidak ada. */
@@ -49,7 +67,7 @@ export function iconSlugFor(
   if (explicit) return explicit;
   const key = name.trim().toLowerCase();
   const mapped = ICON_OVERRIDES[key];
-  if (mapped !== undefined && !mapped.startsWith("/")) return mapped || null;
+  if (mapped !== undefined) return mapped || null;
   return deriveSlug(name) || null;
 }
 
@@ -80,12 +98,16 @@ export function techIconUrl(
   iconSlug?: string | null,
   color?: string | null,
 ): string | null {
-  if (!iconSlug?.trim()) {
-    const mapped = ICON_OVERRIDES[name.trim().toLowerCase()];
-    if (mapped?.startsWith("/")) return mapped;
-  }
+  const explicit = iconSlug?.trim();
+  if (explicit?.startsWith("/")) return explicit;
+
+  const mapped = ICON_OVERRIDES[name.trim().toLowerCase()];
+  if (mapped?.startsWith("/")) return mapped;
+
   const slug = iconSlugFor(name, iconSlug);
   if (!slug) return null;
+  if (slug.startsWith("/")) return slug;
+
   const tint = color?.trim() || LIGHT_ICONS[slug];
   return tint
     ? `https://cdn.simpleicons.org/${slug}/${tint}`

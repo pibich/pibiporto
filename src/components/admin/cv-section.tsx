@@ -5,7 +5,6 @@ import { useRef, useState, useTransition } from "react";
 import {
   FiCheck,
   FiDownload,
-  FiExternalLink,
   FiFileText,
   FiGlobe,
   FiLink,
@@ -167,14 +166,12 @@ export function CvSection({ cvUrl }: { cvUrl: string | null }) {
 
         <div className="flex flex-wrap items-center gap-2">
           <a
-            href={activeCvUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/api/cv"
+            download="CV_Vincent_Bryan.pdf"
             className="inline-flex items-center gap-1.5 rounded-lg border border-line-input bg-panel px-3 py-1.5 font-mono text-xs font-medium text-ink transition-colors hover:border-acc hover:text-acc"
           >
-            <FiDownload className="h-3.5 w-3.5" />
-            <span>Lihat / Unduh CV</span>
-            <FiExternalLink className="h-3 w-3 text-hint" />
+            <FiDownload className="h-3.5 w-3.5 text-acc" />
+            <span>Download Langsung CV</span>
           </a>
 
           {isCustomCv && (

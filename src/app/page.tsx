@@ -11,7 +11,7 @@ import {
 import { SiGithub, SiWhatsapp, SiYoutube } from "react-icons/si";
 import { ContactForm } from "@/components/contact-form";
 import { Hero } from "@/components/hero";
-import { ProjectCard } from "@/components/project-card";
+import { ProjectList } from "@/components/project-list";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -156,7 +156,7 @@ export default async function Home() {
               </p>
             </div>
             <span className="font-mono text-xs text-hint">
-              {tech.length} teknologi terdaftar
+              {tech.length} tech stack yang dikuasai
             </span>
           </div>
 
@@ -202,16 +202,12 @@ export default async function Home() {
               </p>
             </div>
             <span className="font-mono text-xs text-hint">
-              {projects.length} project ditampilkan
+              {projects.length} project yang dibuat
             </span>
           </div>
 
           {projects.length > 0 ? (
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-              {projects.map((p) => (
-                <ProjectCard key={p.id} project={p} />
-              ))}
-            </div>
+            <ProjectList projects={projects} />
           ) : (
             <div className="mt-8 rounded-2xl border border-dashed border-line-strong p-12 text-center font-mono text-xs text-hint">
               Belum ada project yang dipublikasikan. Tambahkan melalui panel
@@ -362,13 +358,10 @@ export default async function Home() {
 
           {/* Contact Form Card */}
           <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8 shadow-xl">
-            <h3 className="text-base font-bold text-ink mb-1 flex items-center gap-2">
+            <h3 className="text-base font-bold text-ink mb-6 flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-acc" />
               <span>Kirimkan Pesan Langsung</span>
             </h3>
-            <p className="text-xs text-muted mb-5">
-              Pesan akan tersimpan aman di database dan diteruskan via email.
-            </p>
             <ContactForm />
           </div>
         </div>

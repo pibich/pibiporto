@@ -23,7 +23,8 @@ import {
 } from "@/app/admin/actions";
 import { ImageCropper } from "@/components/admin/image-cropper";
 import { Markdown } from "@/components/markdown";
-import type { DocSource, Project } from "@/lib/types";
+import { getProjectCategory } from "@/lib/project-category";
+import type { DocSource, Project, ProjectCategory } from "@/lib/types";
 import { uploadImage } from "@/lib/upload";
 
 const inputClass =
@@ -48,6 +49,10 @@ export function ProjectModal({
 
   // Form states
   const [title, setTitle] = useState(project?.title ?? "");
+  const [category, setCategory] = useState<ProjectCategory>(
+    (project?.category as ProjectCategory) ||
+      (project ? getProjectCategory(project) : "website"),
+  );
   const [description, setDescription] = useState(project?.description ?? "");
   const [showDescription, setShowDescription] = useState(
     project?.show_description ?? true,
@@ -157,6 +162,7 @@ export function ProjectModal({
 
       const payload: ProjectInput = {
         title,
+        category,
         description,
         demo_url: demoUrl,
         repo_url: repoUrl,
@@ -289,6 +295,52 @@ export function ProjectModal({
                   placeholder="Contoh: Portfolio Website, E-Commerce App..."
                   className={inputClass}
                 />
+              </div>
+
+              <div className="space-y-1.5">
+                <span className={labelClass}>Kategori / Hashtag Project</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {(
+                    [
+                      {
+                        key: "website",
+                        label: "#website",
+                        desc: "Website / Web App",
+                      },
+                      {
+                        key: "mobile",
+                        label: "#mobile",
+                        desc: "Aplikasi Mobile",
+                      },
+                      {
+                        key: "software",
+                        label: "#software",
+                        desc: "Software / Desktop / Bot",
+                      },
+                    ] as const
+                  ).map((c) => {
+                    const isSelected = category === c.key;
+                    return (
+                      <button
+                        key={c.key}
+                        type="button"
+                        onClick={() => setCategory(c.key)}
+                        className={`flex flex-col items-center justify-center rounded-xl border p-2.5 text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-acc bg-acc/10 text-acc ring-1 ring-acc font-semibold shadow-sm"
+                            : "border-line-input bg-bg/60 text-muted hover:border-line-hover hover:text-ink"
+                        }`}
+                      >
+                        <span className="font-mono text-xs font-bold">
+                          {c.label}
+                        </span>
+                        <span className="text-[10px] opacity-75 mt-0.5">
+                          {c.desc}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="space-y-1.5">

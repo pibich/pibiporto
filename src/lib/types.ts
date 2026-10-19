@@ -4,6 +4,7 @@ export type TechCategory =
   | "database"
   | "baas"
   | "mobile"
+  | "ai"
   | "tools"
   | "lainnya";
 
@@ -19,9 +20,12 @@ export type TechItem = {
 
 export type DocSource = "manual" | "github" | "none";
 
+export type ProjectCategory = "website" | "mobile" | "software";
+
 export type Project = {
   id: string;
   title: string;
+  category?: ProjectCategory | string | null;
   description: string | null;
   demo_url: string | null;
   repo_url: string | null;

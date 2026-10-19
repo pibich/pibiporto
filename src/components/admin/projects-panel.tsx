@@ -17,6 +17,7 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import { deleteProject } from "@/app/admin/actions";
+import { getProjectCategory, PROJECT_CATEGORIES } from "@/lib/project-category";
 import type { Project, TechItem } from "@/lib/types";
 import { ProjectModal } from "./project-modal";
 
@@ -294,6 +295,20 @@ export function ProjectsPanel({
                   <h3 className="text-base font-bold text-ink tracking-tight">
                     {p.title}
                   </h3>
+                  {(() => {
+                    const cat = getProjectCategory(p);
+                    const catCfg = PROJECT_CATEGORIES[cat];
+                    return (
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 font-mono text-[10.5px] font-semibold ${catCfg.badgeClass}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${catCfg.dotClass}`}
+                        />
+                        <span>{catCfg.hashtag}</span>
+                      </span>
+                    );
+                  })()}
                   {p.slug && (
                     <span className="rounded-md border border-line-chip bg-chip px-2 py-0.5 font-mono text-[11px] text-muted">
                       /{p.slug}
